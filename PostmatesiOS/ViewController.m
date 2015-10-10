@@ -20,17 +20,26 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [[Postmates currentManager] getDeliveriesWithCallback:^(NSDictionary *res, NSError *err) {
-        if (err) {
-            NSLog(@"%@", [err localizedDescription]);
-            NSLog(@"%@", res);
-        } else {
-            NSLog(@"%@", res);
+//    [[Postmates currentManager] getDeliveriesWithCallback:^(NSDictionary *res, NSError *err) {
+//        if (err) {
+//            NSLog(@"%@", [err localizedDescription]);
+//            NSLog(@"%@", res);
+//        } else {
+//            NSLog(@"%@", res);
+//        }
+//    }];
+    
+    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:@"20 McAllister St, San Francisco, CA" andDropAddress:@"678 Green St, San Francisco, CA" withCallback:^(NSDictionary *res, NSError *err){
+        if(!err){
+            NSLog(@"Quote: %@" , res);
+        }
+        else{
+            NSLog(@"Error getting quote: %@", err.description);
         }
     }];
     
     /*
-        
+     
         TEST METHODS:
      
         [example getDeliveriesWithCallback:^(NSDictionary *res, NSError *err){

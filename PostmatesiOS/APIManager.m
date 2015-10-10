@@ -26,7 +26,7 @@
 }
 
 // POST /v1/customers/:customer_id/delivery_quotes
-- (void)getDeliveryQuoteWithPickupAddress:(NSString *)pickupStr andDropAddress: (NSString *)dropStr withCallback:(void (^)(NSDictionary *, NSError *))callback {
+- (void)getDeliveryQuoteWithPickupAddress:(NSString *)pickupStr andDropAddress:(NSString *)dropStr withCallback:(void (^)(NSDictionary *, NSError *))callback {
     NSString *baseAddress = [[self.class baseAPIUrl] stringByAppendingString:@"/v1/customers/"];
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/delivery_quotes", baseAddress, _customerId];
     
