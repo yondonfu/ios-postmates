@@ -2,7 +2,7 @@
 //  AppDelegate.m
 //  PostmatesiOS
 //
-//  Created by Snaheth Thumathy on 10/10/15.
+//  Created by Cal Hacks Squad on 10/10/15.
 //  Copyright © 2015 Cal Hacks Squad. All rights reserved.
 //
 

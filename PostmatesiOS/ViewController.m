@@ -2,11 +2,12 @@
 //  ViewController.m
 //  PostmatesiOS
 //
-//  Created by Snaheth Thumathy on 10/10/15.
+//  Created by Cal Hacks Squad on 10/10/15.
 //  Copyright © 2015 Cal Hacks Squad. All rights reserved.
 //
 
 #import "ViewController.h"
+#import "APIManager.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,67 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    APIManager *example = [APIManager sharedInstance];
+    
+    /*
+        
+        TEST METHODS:
+     
+        [example getDeliveriesWithCallback:^(NSDictionary *res, NSError *err){
+            if(!err){
+                NSLog(@"All deliveries: %@" , res);
+            }
+            else{
+                NSLog(@"Error getting all deliveries: %@", err.description);
+            }
+        }];
+        
+        [example getDeliveryQuoteWithPickupAddress:@"20 McAllister St, San Francisco, CA" andDropAddress:@"" withCallback:^(NSDictionary *res, NSError *err){
+            if(!err){
+                NSLog(@"Quote: %@" , res);
+            }
+            else{
+                NSLog(@"Error getting quote: %@", err.description);
+            }
+        }];
+        
+        [example getDeliveryForId:@"1" withCallback:^(NSDictionary *res, NSError *err){
+            if(!err){
+                NSLog(@"Delivery: %@" , res);
+            }
+            else{
+                NSLog(@"Error getting delivery: %@", err.description);
+            }
+        }];
+        
+        [example postDeliveryWithParams:@{} withCallback: ^(NSDictionary *res, NSError *err){
+            if(!err){
+                NSLog(@"Posted delivery: %@" , res);
+            }
+            else{
+                NSLog(@"Error posting delivery: %@", err.description);
+            }
+        }];
+        
+        [example returnDeliveryForId:@"1" withCallback:^(NSDictionary *res, NSError *err){
+            if(!err){
+                NSLog(@"Return delivery: %@" , res);
+            }
+            else{
+                NSLog(@"Error doing return delivery: %@", err.description);
+            }
+        }];
+        
+        [example cancelDeliveryForId:@"1" withCallback:^(NSDictionary *res, NSError *err){
+            if(!err){
+                NSLog(@"Cancel delivery: %@" , res);
+            }
+            else{
+                NSLog(@"Error cancelling delivery: %@", err.description);
+            }
+        }];
+    */
 }
 
 - (void)didReceiveMemoryWarning {
