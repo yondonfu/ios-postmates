@@ -107,7 +107,7 @@
     self.created = [dict objectForKey:@"created"];
     self.updated = [dict objectForKey:@"updated"];
     self.status = [self parseStatus:[dict objectForKey:@"status"]];
-    self.complete = [dict objectForKey:@"complete"];
+    self.complete = [[dict objectForKey:@"complete"] boolValue];
     self.pickUpEta = [dict objectForKey:@"pickup_eta"];
     self.dropOffEta = [dict objectForKey:@"dropoff_eta"];
     self.dropOffDeadline = [dict objectForKey:@"dropoff_deadline"];
@@ -145,7 +145,7 @@
 
 - (NSString *)description {
     if (self.quote) {
-        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: %@, fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff, %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, self.quote.quoteId, self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
+        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: %@, fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff, %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, self.quote.quoteId, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
     } else {
         return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: (null), fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff: %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
     }

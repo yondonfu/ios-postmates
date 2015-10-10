@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "PostmatesiOS"
   s.version      = "0.0.1"
-  s.summary      = "A iOS wrapper for the Postmates REST API"
+  s.summary      = "An iOS wrapper for the Postmates REST API"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
+  An iOS wrapper for the Postmates REST API. Designed to help iOS developers that want to utilize the on demand services of Postmates in their mobile applications.
                    DESC
 
   s.homepage     = "http://github.com/yondonfu/ios-postmates"
@@ -38,7 +39,7 @@ Pod::Spec.new do |s|
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
 
-  s.license      = "MIT (example)"
+  s.license      = { :type => "MIT", :file => "LICENSE.txt" }
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
 
 
