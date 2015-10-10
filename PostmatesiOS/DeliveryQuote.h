@@ -10,4 +10,15 @@
 
 @interface DeliveryQuote : NSObject
 
+@property (strong, nonatomic, readonly) NSString *quoteId;
+@property (strong, nonatomic, readonly) NSString *kind;
+@property (strong, nonatomic) NSDate *created;
+@property (strong, nonatomic) NSDate *expired;
+@property (assign, nonatomic) NSInteger fee;
+@property (strong, nonatomic) NSString *currency;
+@property (strong, nonatomic) NSDate *dropOffEta;
+@property (assign, nonatomic) NSInteger *duration;
+
++ (instancetype)generateDeliveryQuoteWithPickUp:(NSString *)pickUpAddress dropOff:(NSString *)dropOffAddress;
+
 @end

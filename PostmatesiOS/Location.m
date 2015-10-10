@@ -7,6 +7,7 @@
 //
 
 #import "Location.h"
+#import "Postmates.h"
 
 @implementation Location
 
