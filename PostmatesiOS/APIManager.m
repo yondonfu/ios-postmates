@@ -11,36 +11,28 @@
 
 @implementation APIManager
 
-+ (instancetype)sharedInstance {
-    static APIManager *sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[APIManager alloc] init];
-    });
+- (instancetype)initWithCustomerId:(NSString *)customerId apiKey:(NSString *)apiKey {
+    self = [super init];
+    if (!self) return nil;
     
-    return sharedInstance;
+    _customerId = [customerId copy];
+    _apiKey = [apiKey copy];
+    
+    return self;
 }
 
 + (NSString *)baseAPIUrl {
     return @"https://api.postmates.com";
 }
 
-+ (NSString *)customerId {
-    return @"cus_KWXC_xjH7g8d8k";
-}
-
-+ (NSString *)apiKey {
-    return @"7f4c86e8-e582-483c-bd81-18c5f3d8818e";
-}
-
 // POST /v1/customers/:customer_id/delivery_quotes
 - (void)getDeliveryQuoteWithPickupAddress:(NSString *)pickupStr andDropAddress: (NSString *)dropStr withCallback:(void (^)(NSDictionary *, NSError *))callback {
     NSString *baseAddress = [[self.class baseAPIUrl] stringByAppendingString:@"/v1/customers/"];
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/delivery_quotes", baseAddress, [self.class customerId]];
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/delivery_quotes", baseAddress, _customerId];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self.class apiKey] password:@""];
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:_apiKey password:@""];
     
     [manager POST:targetAddress parameters:@{@"dropoff_address" : dropStr, @"pickup_address" : pickupStr} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         callback(responseObject, nil);
@@ -55,11 +47,11 @@
 // GET /v1/customers/:customer_id/deliveries
 - (void)getDeliveriesWithCallback:(void (^)(NSDictionary *, NSError *))callback {
     NSString *baseAddress = [[self.class baseAPIUrl] stringByAppendingString:@"/v1/customers/"];
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", baseAddress, [self.class customerId]];
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", baseAddress, _customerId];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self.class apiKey] password:@""];
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:_apiKey password:@""];
     
     [manager GET:targetAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         callback(responseObject, nil);
@@ -81,11 +73,11 @@
 
 - (void)postDeliveryWithParams:(NSDictionary *)dict withCallback:(void (^)(NSDictionary *, NSError *))callback {
     NSString *baseAddress = [[self.class baseAPIUrl] stringByAppendingString:@"/v1/customers/"];
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", baseAddress, [self.class customerId]];
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", baseAddress, _customerId];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self.class apiKey] password:@""];
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:_apiKey password:@""];
     
     [manager POST:targetAddress parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         callback(responseObject, nil);
@@ -100,11 +92,11 @@
 // GET /v1/customers/:customer_id/deliveries/:delivery_id
 - (void)getDeliveryForId:(NSString *)deliveryId withCallback:(void (^)(NSDictionary *, NSError *))callback {
     NSString *baseAddress = [[self.class baseAPIUrl] stringByAppendingString:@"/v1/customers/"];
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@", baseAddress, [self.class customerId], deliveryId];
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@", baseAddress, _customerId, deliveryId];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self.class apiKey] password:@""];
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:_apiKey password:@""];
     
     [manager GET:targetAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         callback(responseObject, nil);
@@ -119,11 +111,11 @@
 // POST /v1/customer/:customer_id/deliveries/:delivery_id/return
 - (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(void (^)(NSDictionary *, NSError *))callback {
     NSString *baseAddress = [[self.class baseAPIUrl] stringByAppendingString:@"/v1/customers/"];
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", baseAddress, [self.class customerId], deliveryId];
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", baseAddress, _customerId, deliveryId];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self.class apiKey] password:@""];
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:_apiKey password:@""];
     
     [manager POST:targetAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         callback(responseObject, nil);
@@ -138,11 +130,11 @@
 // POST /v1/customer/:customer_id/deliveries/:delivery_id/cancel
 - (void)cancelDeliveryForId:(NSString *)deliveryId withCallback:(void (^)(NSDictionary *, NSError *))callback {
     NSString *baseAddress = [[self.class baseAPIUrl] stringByAppendingString:@"/v1/customers/"];
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/cancel", baseAddress, [self.class customerId], deliveryId];
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/cancel", baseAddress, _customerId, deliveryId];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self.class apiKey] password:@""];
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:_apiKey password:@""];
     
     [manager POST:targetAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         callback(responseObject, nil);

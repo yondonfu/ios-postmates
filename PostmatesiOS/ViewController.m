@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "Postmates.h"
 #import "APIManager.h"
 
 @interface ViewController ()
@@ -19,7 +20,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    APIManager *example = [APIManager sharedInstance];
+    [[Postmates currentManager] getDeliveriesWithCallback:^(NSDictionary *res, NSError *err) {
+        if (err) {
+            NSLog(@"%@", [err localizedDescription]);
+            NSLog(@"%@", res);
+        } else {
+            NSLog(@"%@", res);
+        }
+    }];
     
     /*
         

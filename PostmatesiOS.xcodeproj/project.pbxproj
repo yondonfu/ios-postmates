@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77B190741BC903B400702C6C /* Postmates.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B190731BC903B400702C6C /* Postmates.m */; settings = {ASSET_TAGS = (); }; };
 		9770F5331BC8F66600AE5D94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5321BC8F66600AE5D94 /* main.m */; };
 		9770F5361BC8F66600AE5D94 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5351BC8F66600AE5D94 /* AppDelegate.m */; };
 		9770F5391BC8F66600AE5D94 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5381BC8F66600AE5D94 /* ViewController.m */; };
@@ -19,6 +20,8 @@
 
 /* Begin PBXFileReference section */
 		1E3FFBE6111613D4F5A341CF /* Pods-PostmatesiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PostmatesiOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PostmatesiOS/Pods-PostmatesiOS.debug.xcconfig"; sourceTree = "<group>"; };
+		77B190721BC903B400702C6C /* Postmates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Postmates.h; sourceTree = "<group>"; };
+		77B190731BC903B400702C6C /* Postmates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Postmates.m; sourceTree = "<group>"; };
 		9770F52E1BC8F66600AE5D94 /* PostmatesiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostmatesiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9770F5321BC8F66600AE5D94 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9770F5341BC8F66600AE5D94 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -87,6 +90,8 @@
 				9770F53F1BC8F66600AE5D94 /* LaunchScreen.storyboard */,
 				9770F5421BC8F66600AE5D94 /* Info.plist */,
 				9770F5311BC8F66600AE5D94 /* Supporting Files */,
+				77B190721BC903B400702C6C /* Postmates.h */,
+				77B190731BC903B400702C6C /* Postmates.m */,
 			);
 			path = PostmatesiOS;
 			sourceTree = "<group>";
@@ -230,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9770F54D1BC8F70000AE5D94 /* APIManager.m in Sources */,
+				77B190741BC903B400702C6C /* Postmates.m in Sources */,
 				9770F5391BC8F66600AE5D94 /* ViewController.m in Sources */,
 				9770F5361BC8F66600AE5D94 /* AppDelegate.m in Sources */,
 				9770F5331BC8F66600AE5D94 /* main.m in Sources */,
