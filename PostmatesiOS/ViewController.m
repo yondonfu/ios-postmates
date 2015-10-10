@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "Postmates.h"
 #import "APIManager.h"
+#import "DeliveryQuote.h"
 
 @interface ViewController ()
 
@@ -20,6 +21,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    DeliveryQuote *quote = [DeliveryQuote generateDeliveryQuoteWithPickUp:@"20 McAllister St, San Francisco, CA" dropOff:@"678 Green St, San Francisco, CA"];
+    
+    NSLog(@"here");
+    NSLog(@"%@", quote);
+    
 //    [[Postmates currentManager] getDeliveriesWithCallback:^(NSDictionary *res, NSError *err) {
 //        if (err) {
 //            NSLog(@"%@", [err localizedDescription]);
@@ -29,14 +35,14 @@
 //        }
 //    }];
     
-    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:@"20 McAllister St, San Francisco, CA" andDropAddress:@"678 Green St, San Francisco, CA" withCallback:^(NSDictionary *res, NSError *err){
-        if(!err){
-            NSLog(@"Quote: %@" , res);
-        }
-        else{
-            NSLog(@"Error getting quote: %@", err.description);
-        }
-    }];
+//    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:@"20 McAllister St, San Francisco, CA" andDropAddress:@"678 Green St, San Francisco, CA" withCallback:^(NSDictionary *res, NSError *err){
+//        if(!err){
+//            NSLog(@"Quote: %@" , res);
+//        }
+//        else{
+//            NSLog(@"Error getting quote: %@", err.description);
+//        }
+//    }];
     
     /*
      
