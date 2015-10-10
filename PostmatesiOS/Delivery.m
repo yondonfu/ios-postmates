@@ -25,19 +25,22 @@
     return self;
 }
 
-+ (instancetype)createDeliveryWithParams:(NSDictionary *)params {
-    Delivery *delivery = [[self alloc] initWithParams:params];
-    
+- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(void (^)(Delivery *delivery, NSError *err))callback {
     [[Postmates currentManager] postDeliveryWithParams:params withCallback:^(NSDictionary *res, NSError *err) {
         if (err) {
             NSLog(@"%@", [err localizedDescription]);
             NSLog(@"%@", res);
+            
+            callback(nil, err);
         } else {
             NSLog(@"%@", res);
+            
+            [self updateDeliveryInfoWithDict:res];
+            
+            callback(self, nil);
         }
     }];
     
-    return delivery;
 }
 
 - (void)updateDeliveryStatus {
@@ -124,6 +127,15 @@
     } else {
         return Returned;
     }
+}
+
+- (NSString *)description {
+    if (self.quote) {
+        return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: %@, fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, courier: %@", self.pickUpAddress, self.dropOffAddress, self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, self.quote.quoteId, self.fee, self.currency, self.manifest, self.dropOffId, self.courier];
+    } else {
+        return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: (null), fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, courier: %@", self.pickUpAddress, self.dropOffAddress, self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.courier];
+    }
+    
 }
 
 @end

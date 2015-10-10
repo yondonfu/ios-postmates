@@ -21,31 +21,38 @@
     return self;
 }
 
-+ (instancetype)generateDeliveryQuoteWithPickUp:(NSString *)pickUpAddress dropOff:(NSString *)dropOffAddress {
-    DeliveryQuote *quote = [[self alloc] initWithPickUp:pickUpAddress dropOff:dropOffAddress];
-    
-    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:pickUpAddress andDropAddress:dropOffAddress withCallback:^(NSDictionary *res, NSError *err) {
+- (void)generateDeliveryQuoteWithCallback:(void (^)(DeliveryQuote *quote, NSError *err))callback {
+    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:self.pickUpAddress andDropAddress:self.dropOffAddress withCallback:^(NSDictionary *res, NSError *err) {
         if (err) {
             NSLog(@"%@", [err localizedDescription]);
             NSLog(@"%@", res);
             
+            callback(nil, err);
         } else {
             NSLog(@"%@", res);
             
-            quote.quoteId = [res objectForKey:@"id"];
-            quote.kind = [res objectForKey:@"kind"];
-            quote.created = [res objectForKey:@"created"];
-            quote.expired = [res objectForKey:@"expired"];
-            quote.fee = [res objectForKey:@"fee"];
-            quote.currency = [res objectForKey:@"currency"];
-            quote.dropOffEta = [res objectForKey:@"dropoff_eta"];
-            quote.duration = [res objectForKey:@"duration"];
-
+            [self updateDeliveryQuoteWithDict:res];
+            
+            callback(self, nil);
         }
     }];
-    
-    
-    return quote;
+}
+
+
+- (void)updateDeliveryQuoteWithDict:(NSDictionary *)dict {
+    self.quoteId = [dict objectForKey:@"id"];
+    self.kind = [dict objectForKey:@"kind"];
+    self.created = [dict objectForKey:@"created"];
+    self.expires = [dict objectForKey:@"expires"];
+    self.fee = [[dict objectForKey:@"fee"] integerValue];
+    self.currency = [dict objectForKey:@"currency"];
+    self.dropOffEta = [dict objectForKey:@"dropoff_eta"];
+    self.duration = [[dict objectForKey:@"duration"] integerValue];
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, expires: %@, fee: %ld, currency: %@, dropoff_eta: %@, duration: %ld",
+            self.pickUpAddress, self.dropOffAddress, self.kind, self.quoteId, self.created, self.expires, (long)self.fee, self.currency, self.dropOffEta, (long)self.duration];
 }
 
 @end

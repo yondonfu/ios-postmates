@@ -42,7 +42,7 @@ typedef enum {
 
 - (instancetype)initWithParams:(NSDictionary *)params;
 
-+ (instancetype)createDeliveryWithParams:(NSDictionary *)params;
+- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(void (^)(Delivery *delivery, NSError *err))callback;
 
 - (void)cancelDelivery;
 

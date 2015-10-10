@@ -21,10 +21,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    DeliveryQuote *quote = [DeliveryQuote generateDeliveryQuoteWithPickUp:@"20 McAllister St, San Francisco, CA" dropOff:@"678 Green St, San Francisco, CA"];
+    DeliveryQuote *quote = [[DeliveryQuote alloc] initWithPickUp:@"20 McAllister St, San Francisco, CA" dropOff:@"678 Green St, San Francisco, CA"];
     
-    NSLog(@"here");
-    NSLog(@"%@", quote);
+    [quote generateDeliveryQuoteWithCallback:^(DeliveryQuote *quote, NSError *err) {
+        if (!err) {
+            NSLog(@"%@", quote);
+        }
+    }];
+    
+    
     
 //    [[Postmates currentManager] getDeliveriesWithCallback:^(NSDictionary *res, NSError *err) {
 //        if (err) {

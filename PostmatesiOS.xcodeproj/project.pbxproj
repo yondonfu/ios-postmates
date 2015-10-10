@@ -94,11 +94,6 @@
 				9770F5381BC8F66600AE5D94 /* ViewController.m */,
 				9770F54B1BC8F70000AE5D94 /* APIManager.h */,
 				9770F54C1BC8F70000AE5D94 /* APIManager.m */,
-				9770F53A1BC8F66600AE5D94 /* Main.storyboard */,
-				9770F53D1BC8F66600AE5D94 /* Assets.xcassets */,
-				9770F53F1BC8F66600AE5D94 /* LaunchScreen.storyboard */,
-				9770F5421BC8F66600AE5D94 /* Info.plist */,
-				9770F5311BC8F66600AE5D94 /* Supporting Files */,
 				77B190721BC903B400702C6C /* Postmates.h */,
 				77B190731BC903B400702C6C /* Postmates.m */,
 				77B190751BC9171B00702C6C /* Delivery.h */,
@@ -107,6 +102,11 @@
 				77B190791BC9173500702C6C /* DeliveryQuote.m */,
 				77B1907B1BC9174500702C6C /* Location.h */,
 				77B1907C1BC9174500702C6C /* Location.m */,
+				9770F53A1BC8F66600AE5D94 /* Main.storyboard */,
+				9770F53F1BC8F66600AE5D94 /* LaunchScreen.storyboard */,
+				9770F5421BC8F66600AE5D94 /* Info.plist */,
+				9770F53D1BC8F66600AE5D94 /* Assets.xcassets */,
+				9770F5311BC8F66600AE5D94 /* Supporting Files */,
 			);
 			path = PostmatesiOS;
 			sourceTree = "<group>";
