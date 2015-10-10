@@ -28,6 +28,7 @@
         if (err) {
             NSLog(@"%@", [err localizedDescription]);
             NSLog(@"%@", res);
+            
         } else {
             NSLog(@"%@", res);
             
@@ -39,8 +40,10 @@
             quote.currency = [res objectForKey:@"currency"];
             quote.dropOffEta = [res objectForKey:@"dropoff_eta"];
             quote.duration = [res objectForKey:@"duration"];
+
         }
     }];
+    
     
     return quote;
 }

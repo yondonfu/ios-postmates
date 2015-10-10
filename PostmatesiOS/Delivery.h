@@ -44,5 +44,10 @@ typedef enum {
 
 + (instancetype)createDeliveryWithParams:(NSDictionary *)params;
 
+- (void)cancelDelivery;
+
+- (void)returnDelivery;
+
+- (void)updateDeliveryStatus;
 
 @end
