@@ -10,6 +10,7 @@
 #import "Postmates.h"
 #import "APIManager.h"
 #import "DeliveryQuote.h"
+#import "Delivery.h"
 
 @interface ViewController ()
 
@@ -21,92 +22,60 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    DeliveryQuote *quote = [[DeliveryQuote alloc] initWithPickUp:@"20 McAllister St, San Francisco, CA" dropOff:@"678 Green St, San Francisco, CA"];
+    // TESTS
+    
+    // Delivery quotes
+    DeliveryQuote *quote = [[DeliveryQuote alloc] initWithPickUp:@"313B Eureka Street, San Francisco, CA" dropOff:@"637 Natoma Street, San Francisco, CA"];
     
     [quote generateDeliveryQuoteWithCallback:^(DeliveryQuote *quote, NSError *err) {
         if (!err) {
-            NSLog(@"%@", quote);
+            NSLog(@"QUOTE: %@", quote);
         }
     }];
     
+    // Delivery
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params setValue:quote.quoteId forKey:@"quote_id"];
+    [params setValue:@"A test pkg" forKey:@"manifest"];
+    [params setValue:@"Order #1" forKey:@"manifest_reference"];
+    [params setValue:@"House" forKey:@"pickup_name"];
+    [params setValue:quote.pickUpAddress forKey:@"pickup_address"];
+    [params setValue:@"9173710368" forKey:@"pickup_phone_number"];
+    [params setValue:@"Ring doorbell" forKey:@"pickup_notes"];
+    [params setValue:@"Test" forKey:@"dropoff_name"];
+    [params setValue:@"9173710368" forKey:@"dropoff_phone_number"];
+    [params setValue:quote.dropOffAddress forKey:@"dropoff_address"];
+    [params setValue:@"Knock" forKey:@"dropoff_notes"];
     
+    Delivery *delivery = [[Delivery alloc] initWithParams:params];
     
-//    [[Postmates currentManager] getDeliveriesWithCallback:^(NSDictionary *res, NSError *err) {
-//        if (err) {
-//            NSLog(@"%@", [err localizedDescription]);
-//            NSLog(@"%@", res);
-//        } else {
-//            NSLog(@"%@", res);
-//        }
-//    }];
+    [delivery createDeliveryWithParams:params withCallback:^(Delivery *delivery, NSError *err) {
+        if (!err) {
+            NSLog(@"DELIVERY: %@", delivery);
+            
+////            // Get status
+////            [delivery updateDeliveryStatusWithCallback:^(Delivery *delivery, NSError *err) {
+////                if (!err) {
+////                    NSLog(@"UPDATE STATUS: %@", delivery);
+////                }
+////            }];
+//            
+////            // Cancel delivery
+////            [delivery cancelDeliveryWithCallback:^(Delivery *delivery, NSError *err) {
+////                if (!err) {
+////                    NSLog(@"%@", delivery);
+////                }
+////            }];
+////
+//            // Return delivery
+//            [delivery returnDeliveryWithCallback:^(Delivery *delivery, NSError *err) {
+//                if (!err) {
+//                    NSLog(@"%@", delivery);
+//                }
+//            }];
+        }
+    }];
     
-//    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:@"20 McAllister St, San Francisco, CA" andDropAddress:@"678 Green St, San Francisco, CA" withCallback:^(NSDictionary *res, NSError *err){
-//        if(!err){
-//            NSLog(@"Quote: %@" , res);
-//        }
-//        else{
-//            NSLog(@"Error getting quote: %@", err.description);
-//        }
-//    }];
-    
-    /*
-     
-        TEST METHODS:
-     
-        [example getDeliveriesWithCallback:^(NSDictionary *res, NSError *err){
-            if(!err){
-                NSLog(@"All deliveries: %@" , res);
-            }
-            else{
-                NSLog(@"Error getting all deliveries: %@", err.description);
-            }
-        }];
-        
-        [example getDeliveryQuoteWithPickupAddress:@"20 McAllister St, San Francisco, CA" andDropAddress:@"" withCallback:^(NSDictionary *res, NSError *err){
-            if(!err){
-                NSLog(@"Quote: %@" , res);
-            }
-            else{
-                NSLog(@"Error getting quote: %@", err.description);
-            }
-        }];
-        
-        [example getDeliveryForId:@"1" withCallback:^(NSDictionary *res, NSError *err){
-            if(!err){
-                NSLog(@"Delivery: %@" , res);
-            }
-            else{
-                NSLog(@"Error getting delivery: %@", err.description);
-            }
-        }];
-        
-        [example postDeliveryWithParams:@{} withCallback: ^(NSDictionary *res, NSError *err){
-            if(!err){
-                NSLog(@"Posted delivery: %@" , res);
-            }
-            else{
-                NSLog(@"Error posting delivery: %@", err.description);
-            }
-        }];
-        
-        [example returnDeliveryForId:@"1" withCallback:^(NSDictionary *res, NSError *err){
-            if(!err){
-                NSLog(@"Return delivery: %@" , res);
-            }
-            else{
-                NSLog(@"Error doing return delivery: %@", err.description);
-            }
-        }];
-        
-        [example cancelDeliveryForId:@"1" withCallback:^(NSDictionary *res, NSError *err){
-            if(!err){
-                NSLog(@"Cancel delivery: %@" , res);
-            }
-            else{
-                NSLog(@"Error cancelling delivery: %@", err.description);
-            }
-        }];
-    */
 }
 
 - (void)didReceiveMemoryWarning {

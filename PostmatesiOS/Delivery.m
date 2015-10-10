@@ -8,15 +8,13 @@
 
 #import "Delivery.h"
 #import "Postmates.h"
+#import "Location.h"
 
 @implementation Delivery
 
 - (instancetype)initWithParams:(NSDictionary *)params {
     self = [super init];
     if (!self) return nil;
-    
-    _pickUpAddress = [params objectForKey:@"pickup_address"];
-    _dropOffAddress = [params objectForKey:@"dropoff_address"];
     
     if ([params objectForKey:@"quote"]) {
         _quote = [params objectForKey:@"quote"];
@@ -43,7 +41,7 @@
     
 }
 
-- (void)updateDeliveryStatus {
+- (void)updateDeliveryStatusWithCallback:(void (^)(Delivery *delivery, NSError *err))callback {
     if (!self.status) {
         return;
     }
@@ -52,15 +50,18 @@
         if (err) {
             NSLog(@"%@", [err localizedDescription]);
             NSLog(@"%@", res);
+            
+            callback(nil, err);
         } else {
             NSLog(@"%@", res);
             
             [self updateDeliveryInfoWithDict:res];
+            callback(self, nil);
         }
     }];
 }
 
-- (void)cancelDelivery {
+- (void)cancelDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback {
     if (self.status != Pending && self.status != Pickup) {
         return;
     }
@@ -69,15 +70,18 @@
         if (err) {
             NSLog(@"%@", [err localizedDescription]);
             NSLog(@"%@", res);
+            
+            callback(nil, err);
         } else {
             NSLog(@"%@", res);
             
             [self updateDeliveryInfoWithDict:res];
+            callback(self, nil);
         }
     }];
 }
 
-- (void)returnDelivery {
+- (void)returnDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *error))callback {
     if (self.status != PickupComplete && self.status != Dropoff) {
         return;
     }
@@ -86,10 +90,13 @@
         if (err) {
             NSLog(@"%@", [err localizedDescription]);
             NSLog(@"%@", res);
+            
+            callback(nil, err);
         } else {
             NSLog(@"%@", res);
             
             [self updateDeliveryInfoWithDict:res];
+            callback(self, nil);
         }
     }];
 }
@@ -108,6 +115,13 @@
     self.currency = [dict objectForKey:@"currency"];
     self.manifest = [dict objectForKey:@"manifest"];
     self.dropOffId = [dict objectForKey:@"dropoff_identifier"];
+    
+    NSDictionary *pickUpDict = [dict objectForKey:@"pickup"];
+    self.pickUp = [[Location alloc] initWithParams:pickUpDict];
+    
+    NSDictionary *dropOffDict = [dict objectForKey:@"dropoff"];
+    self.dropOff = [[Location alloc] initWithParams:dropOffDict];
+    
     self.courier = [dict objectForKey:@"courier"];
 }
 
@@ -131,9 +145,9 @@
 
 - (NSString *)description {
     if (self.quote) {
-        return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: %@, fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, courier: %@", self.pickUpAddress, self.dropOffAddress, self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, self.quote.quoteId, self.fee, self.currency, self.manifest, self.dropOffId, self.courier];
+        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: %@, fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff, %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, self.quote.quoteId, self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
     } else {
-        return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: (null), fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, courier: %@", self.pickUpAddress, self.dropOffAddress, self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.courier];
+        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: (null), fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff: %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
     }
     
 }

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DeliveryQuote.h"
+#import "Location.h"
 
 typedef enum {
     Pending = 1,
@@ -20,9 +21,6 @@ typedef enum {
 } DeliveryStatus;
 
 @interface Delivery : NSObject
-
-@property (strong, nonatomic) NSString *pickUpAddress;
-@property (strong, nonatomic) NSString *dropOffAddress;
 
 @property (strong, nonatomic) NSString *kind;
 @property (strong, nonatomic) NSString *deliveryId;
@@ -38,16 +36,18 @@ typedef enum {
 @property (strong, nonatomic) NSString *currency;
 @property (strong, nonatomic) NSDictionary *manifest;
 @property (strong, nonatomic) NSString *dropOffId;
+@property (strong, nonatomic) Location *pickUp;
+@property (strong, nonatomic) Location *dropOff;
 @property (strong, nonatomic) NSDictionary *courier;
 
 - (instancetype)initWithParams:(NSDictionary *)params;
 
 - (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(void (^)(Delivery *delivery, NSError *err))callback;
 
-- (void)cancelDelivery;
+- (void)cancelDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
 
-- (void)returnDelivery;
+- (void)returnDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
 
-- (void)updateDeliveryStatus;
+- (void)updateDeliveryStatusWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
 
 @end
