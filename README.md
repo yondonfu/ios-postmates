@@ -7,6 +7,16 @@ Add the following line to your Podfile:
 
 `pod 'PostmatesiOS', '~> 0.0.1'`
 
+Add the following lines to your bridge file if you plan to use the framework with Swift:
+`#import "PostmatesiOS/Postmates.h"`
+`#import "PostmatesiOS/Delivery.h"`
+`#import "PostmatesiOS/DeliveryQuote.h"`
+`#import "PostmatesiOS/Location.h"`
+`#import "PostmatesiOS/APIManager.h"`
+
+Then, add this line in your class/classes to use the framework:
+`import PostmatesiOS`
+
 ### Add PostmatesiOS to your app
 In your AppDelegate.m file and under application:didFinishLaunchingWithOptions: add this line:
 
