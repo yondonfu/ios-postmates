@@ -1,6 +1,8 @@
 # iOS Objective-C Postmates Library
 An Objective-C wrapper for Postmates REST API that gives iOS developers easier access to Postmates' on demand services within their mobile applications.
 
+[![API Testing](https://img.shields.io/badge/API%20Test-RapidAPI-blue.svg)](https://rapidapi.com/package/PostmatesAPI/functions?utm_source=PostmatesGithub&utm_medium=button&utm_content=Vender_GitHub)
+
 ## Getting Started
 ### CocoaPods
 Add the following line to your Podfile:
