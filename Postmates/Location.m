@@ -13,15 +13,16 @@
 
 - (instancetype)initWithParams:(NSDictionary *)params {
     self = [super init];
-    if (!self) return nil;
     
-    _name = [params objectForKey:@"name"];
-    _phoneNumber = [params objectForKey:@"phone_number"];
-    _address = [params objectForKey:@"address"];
-    _notes = [params objectForKey:@"notes"];
-    
-    NSDictionary *location = [params objectForKey:@"location"];
-    _coordinates = CLLocationCoordinate2DMake([[location objectForKey:@"lat"] doubleValue], [[location objectForKey:@"lng"] doubleValue]);
+    if (self) {
+        _name = [params objectForKey:@"name"];
+        _phoneNumber = [params objectForKey:@"phone_number"];
+        _address = [params objectForKey:@"address"];
+        _notes = [params objectForKey:@"notes"];
+        
+        NSDictionary *location = [params objectForKey:@"location"];
+        _coordinates = CLLocationCoordinate2DMake([[location objectForKey:@"lat"] doubleValue], [[location objectForKey:@"lng"] doubleValue]);
+    }
     
     return self;
 }

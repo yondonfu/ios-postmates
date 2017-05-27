@@ -11,28 +11,35 @@
 
 @implementation Postmates
 
-static APIManager *currentApiManager;
+static APIManager *currentApiManager = nil;
 
-+ (void)setCustomerId:(NSString *)customerId apiKey:(NSString *)apiKey {
-    APIManager *manager = [[APIManager alloc] initWithCustomerId:customerId apiKey:apiKey];
++ (nonnull APIManager *)currentManager {
+    if (!currentApiManager.customerId || !currentApiManager.apiKey) {
+        [NSException raise:@"Missing required fields" format:@"Customer ID or API key cannot be nil."];
+    }
     
-    currentApiManager = manager;
-}
-
-+ (NSString *)getCustomerId {
-    return currentApiManager.customerId;
-}
-
-+ (NSString *)getApiKey {
-    return currentApiManager.apiKey;
-}
-
-+ (APIManager *)currentManager {
     return currentApiManager;
+}
+
++ (void)setCustomerId:(nonnull NSString *)customerId apiKey:(nonnull NSString *)apiKey {
+    if (!customerId || !apiKey) {
+        [NSException raise:@"Missing required fields" format:@"Customer ID or API key cannot be nil."];
+    }
+    
+    APIManager *manager = [[APIManager alloc] initWithCustomerId:customerId apiKey:apiKey];
+    currentApiManager = manager;
 }
 
 + (void)clearCurrentManager {
     currentApiManager = nil;
+}
+
++ (nonnull NSString *)getCustomerId {
+    return currentApiManager.customerId;
+}
+
++ (nonnull NSString *)getApiKey {
+    return currentApiManager.apiKey;
 }
 
 @end

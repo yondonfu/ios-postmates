@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@import CoreLocation;
+#import <CoreLocation/CLLocation.h>
 
 @interface Location : NSObject
 

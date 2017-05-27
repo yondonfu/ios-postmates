@@ -14,10 +14,11 @@
 
 - (instancetype)initWithParams:(NSDictionary *)params {
     self = [super init];
-    if (!self) return nil;
     
-    if ([params objectForKey:@"quote"]) {
-        _quote = [params objectForKey:@"quote"];
+    if (self) {
+        if ([params objectForKey:@"quote"]) {
+            self.quote = [params objectForKey:@"quote"];
+        }
     }
     
     return self;
@@ -62,7 +63,7 @@
 }
 
 - (void)cancelDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback {
-    if (self.status != Pending && self.status != Pickup) {
+    if (self.status != DeliveryStatusPending && self.status != DeliveryStatusPickup) {
         return;
     }
     
@@ -82,7 +83,7 @@
 }
 
 - (void)returnDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *error))callback {
-    if (self.status != PickupComplete && self.status != Dropoff) {
+    if (self.status != DeliveryStatusPickupComplete && self.status != DeliveryStatusDropoff) {
         return;
     }
     
@@ -127,27 +128,33 @@
 
 - (DeliveryStatus)parseStatus:(NSString *)status {
     if ([status isEqualToString:@"pending"]) {
-        return Pending;
+        return DeliveryStatusPending;
+        
     } else if ([status isEqualToString:@"pickup"]) {
-        return Pickup;
+        return DeliveryStatusPickup;
+        
     } else if ([status isEqualToString:@"pickup_complete"]) {
-        return PickupComplete;
+        return DeliveryStatusPickupComplete;
+        
     } else if ([status isEqualToString:@"dropoff"]) {
-        return Dropoff;
+        return DeliveryStatusDropoff;
+        
     } else if ([status isEqualToString:@"canceled"]) {
-        return Canceled;
+        return DeliveryStatusCanceled;
+        
     } else if ([status isEqualToString:@"delivered"]) {
-        return Delivered;
+        return DeliveryStatusDelivered;
+        
     } else {
-        return Returned;
+        return DeliveryStatusReturned;
     }
 }
 
 - (NSString *)description {
     if (self.quote) {
-        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: %@, fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff, %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, self.quote.quoteId, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
+        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %lu, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: %@, fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff, %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, self.quote.quoteId, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
     } else {
-        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %u, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: (null), fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff: %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
+        return [NSString stringWithFormat:@"{kind: %@, id: %@, created: %@, updated: %@, status: %lu, complete: %s, pickup_eta: %@, dropoff_eta: %@, dropoff_deadline: %@, quote_id: (null), fee: %ld, currency: %@, manifest: %@, dropoff_identifier: %@, pickup: %@, dropoff: %@, courier: %@}", self.kind, self.deliveryId, self.created, self.updated, self.status, self.complete ? "true" : "false", self.pickUpEta, self.dropOffEta, self.dropOffDeadline, (long)self.fee, self.currency, self.manifest, self.dropOffId, self.pickUp, self.dropOff, self.courier];
     }
     
 }

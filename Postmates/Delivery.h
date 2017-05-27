@@ -10,15 +10,15 @@
 #import "DeliveryQuote.h"
 #import "Location.h"
 
-typedef enum {
-    Pending = 1,
-    Pickup,
-    PickupComplete,
-    Dropoff,
-    Canceled,
-    Delivered,
-    Returned
-} DeliveryStatus;
+typedef NS_ENUM(NSUInteger, DeliveryStatus) {
+    DeliveryStatusPending = 1,
+    DeliveryStatusPickup,
+    DeliveryStatusPickupComplete,
+    DeliveryStatusDropoff,
+    DeliveryStatusCanceled,
+    DeliveryStatusDelivered,
+    DeliveryStatusReturned
+};
 
 @interface Delivery : NSObject
 
@@ -42,12 +42,9 @@ typedef enum {
 
 - (instancetype)initWithParams:(NSDictionary *)params;
 
-- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-
+- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(void (^)(Delivery *delivery, NSError *error))callback;
 - (void)cancelDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-
 - (void)returnDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-
 - (void)updateDeliveryStatusWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
 
 @end
