@@ -32,6 +32,7 @@
 		77B1909D1BC9BFEF00702C6C /* Location.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77B190911BC9BF6C00702C6C /* Location.h */; };
 		77B1909E1BC9BFEF00702C6C /* Postmates.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77B190931BC9BF6C00702C6C /* Postmates.h */; };
 		77B190A41BC9C7C900702C6C /* libPostmates.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B190821BC9BE4B00702C6C /* libPostmates.a */; };
+		9487EE641EDE69B0005C24CB /* PostmatesiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9487EE631EDE69B0005C24CB /* PostmatesiOSTests.m */; };
 		9770F5331BC8F66600AE5D94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5321BC8F66600AE5D94 /* main.m */; };
 		9770F5361BC8F66600AE5D94 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5351BC8F66600AE5D94 /* AppDelegate.m */; };
 		9770F5391BC8F66600AE5D94 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5381BC8F66600AE5D94 /* ViewController.m */; };
@@ -41,6 +42,16 @@
 		B4EA9AE0817A50C165391355 /* libPods-PostmatesiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C53E15506990ED2F9774CBD0 /* libPods-PostmatesiOS.a */; };
 		DAD07EB51D5BEF7EE461B71E /* libPods-Postmates.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F3EE76E1675E789F3D11871 /* libPods-Postmates.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9487EE661EDE69B0005C24CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9770F5261BC8F66600AE5D94 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9770F52D1BC8F66600AE5D94;
+			remoteInfo = PostmatesiOS;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		77B190801BC9BE4B00702C6C /* CopyFiles */ = {
@@ -73,6 +84,9 @@
 		77B190921BC9BF6C00702C6C /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		77B190931BC9BF6C00702C6C /* Postmates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Postmates.h; sourceTree = "<group>"; };
 		77B190941BC9BF6C00702C6C /* Postmates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Postmates.m; sourceTree = "<group>"; };
+		9487EE611EDE69AF005C24CB /* PostmatesiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostmatesiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9487EE631EDE69B0005C24CB /* PostmatesiOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PostmatesiOSTests.m; sourceTree = "<group>"; };
+		9487EE651EDE69B0005C24CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9770F52E1BC8F66600AE5D94 /* PostmatesiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostmatesiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9770F5321BC8F66600AE5D94 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9770F5341BC8F66600AE5D94 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -95,6 +109,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAD07EB51D5BEF7EE461B71E /* libPods-Postmates.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9487EE5E1EDE69AF005C24CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,11 +176,21 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		9487EE621EDE69B0005C24CB /* PostmatesiOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				9487EE631EDE69B0005C24CB /* PostmatesiOSTests.m */,
+				9487EE651EDE69B0005C24CB /* Info.plist */,
+			);
+			path = PostmatesiOSTests;
+			sourceTree = "<group>";
+		};
 		9770F5251BC8F66600AE5D94 = {
 			isa = PBXGroup;
 			children = (
 				9770F5301BC8F66600AE5D94 /* PostmatesiOS */,
 				77B190831BC9BE4B00702C6C /* Postmates */,
+				9487EE621EDE69B0005C24CB /* PostmatesiOSTests */,
 				9770F52F1BC8F66600AE5D94 /* Products */,
 				7367A4255F70D15461E3E88B /* Pods */,
 				44F4D2F01FCB3DDF4A35FE1D /* Frameworks */,
@@ -171,6 +202,7 @@
 			children = (
 				9770F52E1BC8F66600AE5D94 /* PostmatesiOS.app */,
 				77B190821BC9BE4B00702C6C /* libPostmates.a */,
+				9487EE611EDE69AF005C24CB /* PostmatesiOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,6 +253,24 @@
 			productReference = 77B190821BC9BE4B00702C6C /* libPostmates.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		9487EE601EDE69AF005C24CB /* PostmatesiOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9487EE6A1EDE69B0005C24CB /* Build configuration list for PBXNativeTarget "PostmatesiOSTests" */;
+			buildPhases = (
+				9487EE5D1EDE69AF005C24CB /* Sources */,
+				9487EE5E1EDE69AF005C24CB /* Frameworks */,
+				9487EE5F1EDE69AF005C24CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9487EE671EDE69B0005C24CB /* PBXTargetDependency */,
+			);
+			name = PostmatesiOSTests;
+			productName = PostmatesiOSTests;
+			productReference = 9487EE611EDE69AF005C24CB /* PostmatesiOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9770F52D1BC8F66600AE5D94 /* PostmatesiOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9770F5451BC8F66600AE5D94 /* Build configuration list for PBXNativeTarget "PostmatesiOS" */;
@@ -247,7 +297,7 @@
 		9770F5261BC8F66600AE5D94 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Cal Hacks Squad";
 				TargetAttributes = {
 					77B190811BC9BE4B00702C6C = {
@@ -256,8 +306,16 @@
 					77B1909F1BC9C4D200702C6C = {
 						CreatedOnToolsVersion = 7.0.1;
 					};
+					9487EE601EDE69AF005C24CB = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 7V9G5R9AT4;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 9770F52D1BC8F66600AE5D94;
+					};
 					9770F52D1BC8F66600AE5D94 = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = V865U9FFCP;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -275,6 +333,7 @@
 			projectRoot = "";
 			targets = (
 				9770F52D1BC8F66600AE5D94 /* PostmatesiOS */,
+				9487EE601EDE69AF005C24CB /* PostmatesiOSTests */,
 				77B190811BC9BE4B00702C6C /* Postmates */,
 				77B1909F1BC9C4D200702C6C /* UniversalLib */,
 			);
@@ -282,6 +341,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9487EE5F1EDE69AF005C24CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9770F52C1BC8F66600AE5D94 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -398,6 +464,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9487EE5D1EDE69AF005C24CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9487EE641EDE69B0005C24CB /* PostmatesiOSTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9770F52A1BC8F66600AE5D94 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -409,6 +483,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9487EE671EDE69B0005C24CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9770F52D1BC8F66600AE5D94 /* PostmatesiOS */;
+			targetProxy = 9487EE661EDE69B0005C24CB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		9770F53A1BC8F66600AE5D94 /* Main.storyboard */ = {
@@ -464,6 +546,44 @@
 			};
 			name = Release;
 		};
+		9487EE681EDE69B0005C24CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				DEVELOPMENT_TEAM = 7V9G5R9AT4;
+				INFOPLIST_FILE = PostmatesiOSTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = host.ryans.PostmatesiOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PostmatesiOS.app/PostmatesiOS";
+			};
+			name = Debug;
+		};
+		9487EE691EDE69B0005C24CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				DEVELOPMENT_TEAM = 7V9G5R9AT4;
+				INFOPLIST_FILE = PostmatesiOSTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = host.ryans.PostmatesiOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PostmatesiOS.app/PostmatesiOS";
+			};
+			name = Release;
+		};
 		9770F5431BC8F66600AE5D94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -477,8 +597,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -520,8 +642,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -549,6 +673,8 @@
 			baseConfigurationReference = A6ACB593DBC313F7523E9DDC /* Pods-PostmatesiOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = V865U9FFCP;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
@@ -560,6 +686,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chs.PostmatesiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -568,6 +695,8 @@
 			baseConfigurationReference = C3CFFE6E089DFD75E92007C3 /* Pods-PostmatesiOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = V865U9FFCP;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
@@ -579,6 +708,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chs.PostmatesiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -599,6 +729,15 @@
 			buildConfigurations = (
 				77B190A11BC9C4D200702C6C /* Debug */,
 				77B190A21BC9C4D200702C6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9487EE6A1EDE69B0005C24CB /* Build configuration list for PBXNativeTarget "PostmatesiOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9487EE681EDE69B0005C24CB /* Debug */,
+				9487EE691EDE69B0005C24CB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

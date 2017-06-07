@@ -11,48 +11,54 @@
 
 @implementation DeliveryQuote
 
-- (instancetype)initWithPickUp:(NSString *)pickUpAddress dropOff:(NSString *)dropOffAddress {
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = [super init];
-    if (!self) return nil;
     
-    _pickUpAddress = pickUpAddress;
-    _dropOffAddress = dropOffAddress;
+    if (self) {
+        self.quoteId = [dictionary objectForKey:@"id"];
+        self.kind = [dictionary objectForKey:@"kind"];
+        self.created = [dictionary objectForKey:@"created"];
+        self.expires = [dictionary objectForKey:@"expires"];
+        self.currency = [dictionary objectForKey:@"currency"];
+        self.dropOffEta = [dictionary objectForKey:@"dropoff_eta"];
+        self.duration = [[dictionary objectForKey:@"duration"] integerValue];
+        
+        int fee = [[dictionary objectForKey:@"fee"] intValue];
+        self.fee = [NSNumber numberWithFloat:(fee * 0.01)];
+    }
     
     return self;
 }
 
-- (void)generateDeliveryQuoteWithCallback:(void (^)(DeliveryQuote *quote, NSError *err))callback {
-    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:self.pickUpAddress andDropAddress:self.dropOffAddress withCallback:^(NSDictionary *res, NSError *err) {
-        if (err) {
-            NSLog(@"%@", [err localizedDescription]);
-            NSLog(@"%@", res);
-            
-            callback(nil, err);
-        } else {
-            NSLog(@"%@", res);
-            
-            [self updateDeliveryQuoteWithDict:res];
-            
-            callback(self, nil);
-        }
-    }];
+- (instancetype)initWithPickUp:(NSString *)pickUpAddress dropOff:(NSString *)dropOffAddress {
+    self = [super init];
+    
+    if (self) {
+        _pickUpAddress = pickUpAddress;
+        _dropOffAddress = dropOffAddress;
+    }
+    
+    return self;
 }
 
-
-- (void)updateDeliveryQuoteWithDict:(NSDictionary *)dict {
-    self.quoteId = [dict objectForKey:@"id"];
-    self.kind = [dict objectForKey:@"kind"];
-    self.created = [dict objectForKey:@"created"];
-    self.expires = [dict objectForKey:@"expires"];
-    self.fee = [[dict objectForKey:@"fee"] integerValue];
-    self.currency = [dict objectForKey:@"currency"];
-    self.dropOffEta = [dict objectForKey:@"dropoff_eta"];
-    self.duration = [[dict objectForKey:@"duration"] integerValue];
-}
+//- (void)generateDeliveryQuoteWithCallback:(DeliveryQuoteBlock)callback {
+//    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:self.pickUpAddress andDropAddress:self.dropOffAddress withCallback:^(DeliveryQuote *quote, NSError *error) {
+//        if (!error) {
+//            NSLog(@"%@ Error: %@", NSStringFromSelector(_cmd), [error localizedDescription]);
+//            callback(nil, err);
+//        } else {
+//            NSLog(@"%@ Error: %@", NSStringFromSelector(_cmd), [error localizedDescription]);
+//            
+//            [self updateDeliveryQuoteWithDict:res];
+//            
+//            callback(self, nil);
+//        }
+//    }];
+//}
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, expires: %@, fee: %ld, currency: %@, dropoff_eta: %@, duration: %ld",
-            self.pickUpAddress, self.dropOffAddress, self.kind, self.quoteId, self.created, self.expires, (long)self.fee, self.currency, self.dropOffEta, (long)self.duration];
+    return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, expires: %@, fee: %@, currency: %@, dropoff_eta: %@, duration: %li",
+            self.pickUpAddress, self.dropOffAddress, self.kind, self.quoteId, self.created, self.expires, self.fee, self.currency, self.dropOffEta, self.duration];
 }
 
 @end

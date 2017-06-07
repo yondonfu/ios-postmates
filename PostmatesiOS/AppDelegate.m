@@ -7,18 +7,18 @@
 //
 
 #import "AppDelegate.h"
-#import "Postmates.h"
-
-@interface AppDelegate ()
-
-@end
+//#import "Postmates.h"
+//
+//#ifdef DEBUG
+//    static NSString *kCustomerId = @"cus_Kf3bMZuhfEUbQV";
+//#else
+//    static NSString *kCustomerId = @"cus_LHaCYzKoaOhZTF"
+//#endif
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
     return YES;
 }
 

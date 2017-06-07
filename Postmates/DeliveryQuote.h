@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class DeliveryQuote;
+
+typedef void (^DeliveryQuoteBlock)(DeliveryQuote *quote, NSError *error);
+
 @interface DeliveryQuote : NSObject
 
 @property (strong, nonatomic) NSString *pickUpAddress;
@@ -16,13 +20,13 @@
 @property (strong, nonatomic) NSString *kind;
 @property (strong, nonatomic) NSDate *created;
 @property (strong, nonatomic) NSDate *expires;
-@property (assign, nonatomic) NSInteger fee;
+@property (strong, nonatomic) NSNumber *fee;
 @property (strong, nonatomic) NSString *currency;
 @property (strong, nonatomic) NSDate *dropOffEta;
 @property (assign, nonatomic) NSInteger duration;
 
 - (instancetype)initWithPickUp:(NSString *)pickUpAddress dropOff:(NSString *)dropOffAddress;
 
-- (void)generateDeliveryQuoteWithCallback:(void (^)(DeliveryQuote *quote, NSError *err))callback;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end

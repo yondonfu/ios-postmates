@@ -11,16 +11,16 @@
 
 @implementation Location
 
-- (instancetype)initWithParams:(NSDictionary *)params {
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = [super init];
     
     if (self) {
-        _name = [params objectForKey:@"name"];
-        _phoneNumber = [params objectForKey:@"phone_number"];
-        _address = [params objectForKey:@"address"];
-        _notes = [params objectForKey:@"notes"];
+        _name = [dictionary objectForKey:@"name"];
+        _phoneNumber = [dictionary objectForKey:@"phone_number"];
+        _address = [dictionary objectForKey:@"address"];
+        _notes = [dictionary objectForKey:@"notes"];
         
-        NSDictionary *location = [params objectForKey:@"location"];
+        NSDictionary *location = [dictionary objectForKey:@"location"];
         _coordinates = CLLocationCoordinate2DMake([[location objectForKey:@"lat"] doubleValue], [[location objectForKey:@"lng"] doubleValue]);
     }
     
@@ -28,7 +28,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"{name: %@, phone_number: %@, address: %@, notes: %@, location: {lat: %f, lng: %f}}", self.name, self.phoneNumber, self.address, self.notes, self.coordinates.latitude, self.coordinates.longitude];
+    return [NSString stringWithFormat:@"{ name: %@, phone_number: %@, address: %@, notes: %@, location: (%f, %f) }", self.name, self.phoneNumber, self.address, self.notes, self.coordinates.latitude, self.coordinates.longitude];
 }
 
 @end

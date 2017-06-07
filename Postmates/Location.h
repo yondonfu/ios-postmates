@@ -17,6 +17,6 @@
 @property (strong, nonatomic) NSString *notes;
 @property (assign, nonatomic) CLLocationCoordinate2D coordinates;
 
-- (instancetype)initWithParams:(NSDictionary *)params;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end

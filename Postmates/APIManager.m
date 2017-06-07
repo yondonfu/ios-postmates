@@ -9,6 +9,10 @@
 #import "APIManager.h"
 #import "AFNetworking.h"
 
+static NSString *kPostmatesTestToken = @"Basic ZWZmY2RhOTItZWNjMy00ZGI2LWI5NTQtZjhkOTE0ZTA5NGQ5Og==";
+
+typedef void (^ResponseBlock)(NSDictionary *response, NSError *error);
+
 @interface APIManager ()
 
 @property (nonatomic, strong) NSString *customerId;
@@ -16,7 +20,7 @@
 
 @end
 
-static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/customers";
+static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/customers/";
 
 @implementation APIManager
 
@@ -33,55 +37,60 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     return self;
 }
 
-- (AFHTTPSessionManager *)sessionManager {
-    static AFHTTPSessionManager *manager = nil;
-    static dispatch_once_t onceToken;
-    
-    dispatch_once(&onceToken, ^{
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-        manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-        [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:self.apiKey password:@""];
-    });
-    
-    return manager;
-}
-
 # pragma mark - Endpoints
 
-// POST /v1/customers/:customer_id/delivery_quotes
-- (void)getDeliveryQuoteWithPickupAddress:(NSString *)pickupStr andDropAddress:(NSString *)dropStr withCallback:(ResponseBlock)callback {
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/delivery_quotes", kPostmatesCustomersURL, self.customerId];
-    NSDictionary *parameters = @{ @"dropoff_address" : dropStr, @"pickup_address" : pickupStr };
-    
-    [self postWithURL:targetAddress paramaters:parameters block:^(NSDictionary *response, NSError *error) {
-        if (!error) {
-            callback(response, nil);
-        } else {
-            callback(nil, nil);
-        }
-    }];
-}
-
 // GET /v1/customers/:customer_id/deliveries
-- (void)getDeliveriesWithCallback:(ResponseBlock)callback {
+- (void)getDeliveriesWithCallback:(DeliveriesResponseBlock)callback {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", kPostmatesCustomersURL, self.customerId];
+    __block NSMutableArray<Delivery *> *deliveries = [NSMutableArray array];
     
     [self getWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
         if (!error) {
-            callback(response, nil);
+            if ([response objectForKey:@"data"]) {
+                for (NSDictionary *deliveryDict in response[@"data"]) {
+                    Delivery *delivery = [[Delivery alloc] initWithDictionary:deliveryDict];
+                    
+                    if (![deliveries containsObject:delivery]) {
+                        [deliveries addObject:delivery];
+                    }
+                }
+                
+                callback(deliveries, nil);
+            }
         } else {
             callback(nil, error);
         }
     }];
 }
 
+// POST /v1/customers/:customer_id/delivery_quotes
+- (void)getDeliveryQuoteWithPickupAddress:(NSString *)pickupStr andDropAddress:(NSString *)dropStr withCallback:(DeliveryQuoteResponseBlock)callback {
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/delivery_quotes", kPostmatesCustomersURL, self.customerId];
+    NSDictionary *parameters = @{ @"dropoff_address" : dropStr, @"pickup_address" : pickupStr };
+    
+    [self postWithURL:targetAddress paramaters:parameters block:^(NSDictionary *response, NSError *error) {
+        if (!error) {
+            DeliveryQuote *quote = nil;
+            
+            if ([response objectForKey:@"id"]) {
+                quote = [[DeliveryQuote alloc] initWithDictionary:response];
+            }
+            
+            callback(quote, nil);
+        } else {
+            callback(nil, nil);
+        }
+    }];
+}
+
 // GET /v1/customers/:customer_id/deliveries/:delivery_id
-- (void)getDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback {
+- (void)getDeliveryForId:(NSString *)deliveryId withCallback:(DeliveryResponseBlock)callback {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@", kPostmatesCustomersURL, self.customerId, deliveryId];
     
     [self getWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
         if (!error) {
-            callback(response, nil);
+            Delivery *delivery = [[Delivery alloc] initWithDictionary:response];
+            callback(delivery, nil);
         } else {
             callback(nil, error);
         }
@@ -162,12 +171,22 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 # pragma mark - Helpers
 
 - (void)getWithURL:(NSString *)url parameters:(NSDictionary *)parameters block:(ResponseBlock)block {
-    [[self sessionManager] GET:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    
+#ifdef DEBUG
+    [manager.requestSerializer setValue:kPostmatesTestToken forHTTPHeaderField:@"Authorization"];
+#else
+    // Don't set username when using dev token
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:self.apiKey password:@""];
+#endif
+    
+    [manager GET:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         block(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         // NSError *dictError;
         // NSDictionary *json = [NSJSONSerialization JSONObjectWithData:task. options:kNilOptions error:&dictError];
-        block(nil, nil);
+        block(nil, error);
     }];
     
     //    [[self sessionManager] GET:targetAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -181,10 +200,21 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 }
 
 - (void)postWithURL:(NSString *)url paramaters:(NSDictionary *)parameters block:(ResponseBlock)block {
-    [[self sessionManager] POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    [manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    
+#ifdef DEBUG
+    [manager.requestSerializer setValue:kPostmatesTestToken forHTTPHeaderField:@"Authorization"];
+#else
+    // Don't set username when using dev token
+    [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:self.apiKey password:@""];
+#endif
+    
+    [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         block(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        block(nil, nil);
+        block(nil, error);
     }];
 }
 

@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "DeliveryQuote.h"
 #import "Location.h"
+
+@class Delivery;
 
 typedef NS_ENUM(NSUInteger, DeliveryStatus) {
     DeliveryStatusPending = 1,
@@ -20,31 +23,40 @@ typedef NS_ENUM(NSUInteger, DeliveryStatus) {
     DeliveryStatusReturned
 };
 
+typedef void (^DeliveryCallbackBlock)(Delivery *delivery, NSError *error);
+
 @interface Delivery : NSObject
 
 @property (strong, nonatomic) NSString *kind;
 @property (strong, nonatomic) NSString *deliveryId;
 @property (strong, nonatomic) NSDate *created;
 @property (strong, nonatomic) NSDate *updated;
+
 @property (assign, nonatomic) DeliveryStatus status;
 @property (assign, nonatomic) BOOL complete;
+
 @property (strong, nonatomic) NSDate *pickUpEta;
 @property (strong, nonatomic) NSDate *dropOffEta;
 @property (strong, nonatomic) NSDate *dropOffDeadline;
-@property (strong, nonatomic) DeliveryQuote *quote; // Optional
-@property (assign, nonatomic) NSInteger fee;
+
+@property (strong, nonatomic) DeliveryQuote *quote;
+@property (strong, nonatomic) NSNumber *fee;
 @property (strong, nonatomic) NSString *currency;
 @property (strong, nonatomic) NSDictionary *manifest;
+
 @property (strong, nonatomic) NSString *dropOffId;
 @property (strong, nonatomic) Location *pickUp;
 @property (strong, nonatomic) Location *dropOff;
+
 @property (strong, nonatomic) NSDictionary *courier;
 
-- (instancetype)initWithParams:(NSDictionary *)params;
+- (void)cancelDeliveryWithCallback:(DeliveryCallbackBlock)callback;
+- (void)returnDeliveryWithCallback:(DeliveryCallbackBlock)callback;
+- (void)updateDeliveryStatusWithCallback:(DeliveryCallbackBlock)callback;
 
-- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(void (^)(Delivery *delivery, NSError *error))callback;
-- (void)cancelDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-- (void)returnDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-- (void)updateDeliveryStatusWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
+- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(DeliveryCallbackBlock)callback;
+
+// Use this
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end
