@@ -6,6 +6,8 @@
 build/
 DerivedData
 
+keys.json
+
 ## Various settings
 *.pbxuser
 !default.pbxuser
@@ -41,5 +43,3 @@ xcuserdata
 # Carthage/Checkouts
 
 Carthage/Build
-
-keys.txt
