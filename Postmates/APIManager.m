@@ -9,7 +9,7 @@
 #import "APIManager.h"
 #import "AFNetworking.h"
 
-static NSString *kPostmatesTestToken = @"Basic ZWZmY2RhOTItZWNjMy00ZGI2LWI5NTQtZjhkOTE0ZTA5NGQ5Og==";
+NSString * const kPostmatesTestToken = @"Basic ZWZmY2RhOTItZWNjMy00ZGI2LWI5NTQtZjhkOTE0ZTA5NGQ5Og==";
 
 typedef void (^ResponseBlock)(NSDictionary *response, NSError *error);
 
@@ -143,7 +143,7 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 }
 
 // POST /v1/customer/:customer_id/deliveries/:delivery_id/return
-- (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback {
+- (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback __deprecated {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", kPostmatesCustomersURL, self.customerId, deliveryId];
     
     [self postWithURL:targetAddress paramaters:nil block:^(NSDictionary *response, NSError *error) {
@@ -177,26 +177,14 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 #ifdef DEBUG
     [manager.requestSerializer setValue:kPostmatesTestToken forHTTPHeaderField:@"Authorization"];
 #else
-    // Don't set username when using dev token
     [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:self.apiKey password:@""];
 #endif
     
     [manager GET:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         block(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        // NSError *dictError;
-        // NSDictionary *json = [NSJSONSerialization JSONObjectWithData:task. options:kNilOptions error:&dictError];
         block(nil, error);
     }];
-    
-    //    [[self sessionManager] GET:targetAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-    //        callback(responseObject, nil);
-    //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    //        NSError *dictError;
-    //        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:operation.responseData options:kNilOptions error:&dictError];
-    //
-    //        callback(json, error);
-    //    }];
 }
 
 - (void)postWithURL:(NSString *)url paramaters:(NSDictionary *)parameters block:(ResponseBlock)block {
@@ -207,7 +195,6 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 #ifdef DEBUG
     [manager.requestSerializer setValue:kPostmatesTestToken forHTTPHeaderField:@"Authorization"];
 #else
-    // Don't set username when using dev token
     [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:self.apiKey password:@""];
 #endif
     

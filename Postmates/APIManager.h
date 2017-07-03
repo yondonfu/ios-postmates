@@ -29,9 +29,9 @@ typedef void (^DeliveryQuoteResponseBlock)(DeliveryQuote *quote, NSError *error)
 @property (nonatomic, readonly) NSString *apiKey;
 
 /**
- Get deliveries
+ Get all deliveries
  
- @param Callback containing `Delivery` objects or an `NSError`
+ @param block Block containing `Delivery` objects or an `NSError`
  */
 - (void)getDeliveriesWithCallback:(DeliveriesResponseBlock)block;
 
@@ -44,7 +44,7 @@ typedef void (^DeliveryQuoteResponseBlock)(DeliveryQuote *quote, NSError *error)
 - (void)getDeliveryForId:(NSString *)deliveryId withCallback:(DeliveryResponseBlock)block;
 
 /**
- Get delivery Quote
+ Get delivery quote
  
  @param pickupStr Pickup address
  @param dropStr   Dropoff address
@@ -54,6 +54,24 @@ typedef void (^DeliveryQuoteResponseBlock)(DeliveryQuote *quote, NSError *error)
                            andDropAddress:(NSString *)dropStr
                              withCallback:(DeliveryQuoteResponseBlock)callback;
 
+/**
+ Post delivery request
+ 
+ @param quoteId <#quoteId description#>
+ @param manifest <#manifest description#>
+ @param optionalRef <#optionalRef description#>
+ @param pickupName <#pickupName description#>
+ @param pickupAddress <#pickupAddress description#>
+ @param pickupPhone <#pickupPhone description#>
+ @param optionalbusName <#optionalbusName description#>
+ @param pickupNotes <#pickupNotes description#>
+ @param dropName <#dropName description#>
+ @param dropAdd <#dropAdd description#>
+ @param dropPhone <#dropPhone description#>
+ @param optionalBusName <#optionalBusName description#>
+ @param notes <#notes description#>
+ @param callback <#callback description#>
+ */
 - (void)postDeliveryWithQuoteId:(NSString *)quoteId
                        manifest:(NSString *)manifest
              manifest_reference:(NSString *)optionalRef
@@ -69,10 +87,38 @@ typedef void (^DeliveryQuoteResponseBlock)(DeliveryQuote *quote, NSError *error)
                        andNotes:(NSString *)notes
                    withCallback:(ResponseBlock)callback;
 
+/**
+ Post delivery request (dictionary)
+ 
+ @param dict <#dict description#>
+ @param callback <#callback description#>
+ */
 - (void)postDeliveryWithParams:(NSDictionary *)dict withCallback:(ResponseBlock)callback;
-- (void)cancelDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback;
-- (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback;
 
+/**
+ <#Description#>
+ 
+ @param deliveryId <#deliveryId description#>
+ @param callback <#callback description#>
+ */
+- (void)cancelDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback;
+
+/**
+ Return delivery by identifier (deprecated)
+ https://postmates.com/developer/docs/endpoints#return_delivery
+ 
+ @param deliveryId Delivery ID
+ @param callback <#callback description#>
+ */
+- (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback __deprecated;
+
+/**
+ <#Description#>
+ 
+ @param customerId <#customerId description#>
+ @param apiKey <#apiKey description#>
+ @return <#return value description#>
+ */
 - (instancetype)initWithCustomerId:(NSString *)customerId apiKey:(NSString *)apiKey;
 
 @end
