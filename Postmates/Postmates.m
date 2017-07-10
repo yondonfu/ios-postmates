@@ -10,7 +10,7 @@
 
 static APIManager *currentApiManager = nil;
 
-+ (nonnull APIManager *)currentManager {
++ (APIManager *)currentManager {
     if (!currentApiManager.customerId || !currentApiManager.apiKey) {
         [NSException raise:@"Missing required fields" format:@"Customer ID or API key cannot be nil."];
     }
@@ -18,7 +18,7 @@ static APIManager *currentApiManager = nil;
     return currentApiManager;
 }
 
-+ (void)setCustomerId:(nonnull NSString *)customerId apiKey:(nonnull NSString *)apiKey {
++ (void)setCustomerId:(NSString *)customerId apiKey:(NSString *)apiKey {
     if (!customerId || !apiKey) {
         [NSException raise:@"Missing required fields" format:@"Customer ID or API key cannot be nil."];
     }
@@ -31,11 +31,11 @@ static APIManager *currentApiManager = nil;
     currentApiManager = nil;
 }
 
-+ (nonnull NSString *)getCustomerId {
++ (NSString *)getCustomerId {
     return currentApiManager.customerId;
 }
 
-+ (nonnull NSString *)getApiKey {
++ (NSString *)getApiKey {
     return currentApiManager.apiKey;
 }
 

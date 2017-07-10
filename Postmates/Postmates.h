@@ -16,14 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param customerId Postmates customer ID
  @param apiKey     Postmates API key
  */
-+ (void)setCustomerId:(nonnull NSString *)customerId apiKey:(nonnull NSString *)apiKey;
++ (void)setCustomerId:(NSString *)customerId apiKey:(NSString *)apiKey;
 
 /**
  Current manager
  
  @return Shared instance of API manager
  */
-+ (nonnull APIManager *)currentManager;
++ (APIManager *)currentManager;
 
 /**
  Sets current manager to nil
@@ -35,14 +35,14 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return Postmates customer ID in use
  */
-+ (nonnull NSString *)getCustomerId;
++ (NSString *)getCustomerId;
 
 /**
  API key
  
  @return Postmates API key in use
  */
-+ (nonnull NSString *)getApiKey;
++ (NSString *)getApiKey;
 
 @end
 

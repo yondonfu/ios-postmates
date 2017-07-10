@@ -99,9 +99,9 @@
     
     // Add tip to delivery
     [[Postmates currentManager] addTipForDelivery:DELIVERY_ID tip:@3.50 withCallback:^(Delivery *delivery, NSError *error) {
-        // Delivery cannot be tipped
-        if (error.code == -1011) {
-            XCTAssertTrue(error.code == -1011);
+        // Delivery past tip window
+        if (error.code == 400) {
+            XCTAssertTrue(error.code == 400);
             [expectation fulfill];
         } else {
             XCTAssertNotNil(delivery);
@@ -117,9 +117,9 @@
     
     // Cancel delivery
     [[Postmates currentManager] cancelDeliveryForId:DELIVERY_ID withCallback:^(NSDictionary *response, NSError *error) {
-        // Delivery cannot be cancelled
-        if (error.code == -1011) {
-            XCTAssertTrue(error.code == -1011);
+        // Delivery cannot be cancelled (old ID)
+        if (error.code == 400) {
+            XCTAssertTrue(error.code == 400);
             [expectation fulfill];
         } else {
             XCTAssertNotNil(response);

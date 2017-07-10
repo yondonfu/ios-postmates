@@ -65,7 +65,7 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/delivery_quotes", kPostmatesCustomersURL, self.customerId];
     NSDictionary *parameters = @{ @"dropoff_address" : dropStr, @"pickup_address" : pickupStr };
     
-    [self postWithURL:targetAddress paramaters:parameters block:^(NSDictionary *response, NSError *error) {
+    [self postWithURL:targetAddress parameters:parameters block:^(NSDictionary *response, NSError *error) {
         if (!error) {
             DeliveryQuote *quote = nil;
             
@@ -132,7 +132,7 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 - (void)postDeliveryWithParams:(NSDictionary *)parameters withCallback:(ResponseBlock)callback {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", kPostmatesCustomersURL, self.customerId];
     
-    [self postWithURL:targetAddress paramaters:parameters block:^(NSDictionary *response, NSError *error) {
+    [self postWithURL:targetAddress parameters:parameters block:^(NSDictionary *response, NSError *error) {
         if (!error) {
             callback(response, error);
         } else {
@@ -143,10 +143,10 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 
 // POST /v1/customers/:customer_id/deliveries/:delivery_id
 - (void)addTipForDelivery:(NSString *)deliveryId tip:(NSNumber *)tip withCallback:(DeliveryResponseBlock)block {
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", kPostmatesCustomersURL, self.customerId, deliveryId];
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@", kPostmatesCustomersURL, self.customerId, deliveryId];
     NSDictionary *parameters = (tip) ? @{ @"tip_by_customer" : @(tip.doubleValue / 0.01) } : nil;
     
-    [self postWithURL:targetAddress paramaters:parameters block:^(NSDictionary *response, NSError *error) {
+    [self postWithURL:targetAddress parameters:parameters block:^(NSDictionary *response, NSError *error) {
         if (!error) {
             Delivery *delivery = [[Delivery alloc] initWithDictionary:response];
             block(delivery, nil);
@@ -160,7 +160,7 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 - (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback __deprecated {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", kPostmatesCustomersURL, self.customerId, deliveryId];
     
-    [self postWithURL:targetAddress paramaters:nil block:^(NSDictionary *response, NSError *error) {
+    [self postWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
         if (!error) {
             callback(response, error);
         } else {
@@ -173,7 +173,7 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 - (void)cancelDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/cancel", kPostmatesCustomersURL, self.customerId, deliveryId];
     
-    [self postWithURL:targetAddress paramaters:nil block:^(NSDictionary *response, NSError *error) {
+    [self postWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
         if (!error) {
             callback(response, error);
         } else {
@@ -194,14 +194,19 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:self.apiKey password:@""];
 #endif
     
+    // TODO: Custom NSError
+    
     [manager GET:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         block(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        block(nil, error);
+        NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+        NSInteger status = [response statusCode];
+        
+        block(nil, [self errorWithError:error status:status]);
     }];
 }
 
-- (void)postWithURL:(NSString *)url paramaters:(NSDictionary *)parameters block:(ResponseBlock)block {
+- (void)postWithURL:(NSString *)url parameters:(NSDictionary *)parameters block:(ResponseBlock)block {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     [manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -215,8 +220,76 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         block(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        block(nil, error);
+        NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+        NSInteger status = [response statusCode];
+        
+        block(nil, [self errorWithError:error status:status]);
     }];
+}
+
+# pragma mark - Error Helpers
+
+- (NSError *)errorWithError:(NSError *)error status:(NSInteger)status {
+    if (!error) return nil;
+    
+    NSString *statusInfo = nil;
+    NSDictionary *errorDict = [NSJSONSerialization JSONObjectWithData:error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] options:kNilOptions error:nil];
+    NSString *message = (errorDict) ? [errorDict objectForKey:@"message"] : @"";
+    
+    // NSArray *codes = @[ @"invalid_params",
+    //                     @"unknown_location",
+    //                     @"request_rate_limit_exceeded",
+    //                     @"customer_not_approved",
+    //                     @"account_suspended",
+    //                     @"not_found",
+    //                     @"service_unavailable",
+    //                     @"delivery_limit_exceeded",
+    //                     @"customer_limited",
+    //                     @"couriers_busy"];
+    //
+    // for (NSString *code in codes) {
+    //     if ([errorDict objectForKey:@"code"] && [[errorDict objectForKey:@"code"] isEqualToString:code]) {
+    //         message = [errorDict objectForKey:@"message"];
+    //         break;
+    //     }
+    // }
+    
+    // invalid_params              - The indicated parameters were missing or invalid.
+    // unknown_location            - We weren't able to understand the provided address. This usually indicates the address is wrong, or perhaps not exact enough.
+    // request_rate_limit_exceeded - This API key has made too many requests.
+    // customer_not_approved       - You account has not been approved to create deliveries. Please refer to our approval guidelines for more information.
+    // account_suspended
+    // not_found
+    // service_unavailable
+    // delivery_limit_exceeded   - You have hit the maximum amount of ongoing deliveries allowed.
+    // customer_limited          - Your account's limits have been exceeded.
+    // couriers_busy             - All of our couriers are currently busy.
+    
+    switch (status) {
+        case 304:
+            statusInfo = @"Not Modified: Resource hasn't been updated since the date provided.";
+            break;
+        case 400:
+            statusInfo = @"Bad Request: You did something wrong. Often a missing argument or parameter.";
+            break;
+        case 401:
+            statusInfo = @"Unauthorized: Authentication was incorrect.";
+            break;
+        case 404:
+            statusInfo = @"Not Found";
+            break;
+        case 500:
+            statusInfo = @"Internal Server Error: We had a problem processing the request.";
+            break;
+        case 503:
+            statusInfo = @"Service Unavailable: Try again later.";
+            break;
+        default:
+            statusInfo = @"Unknown Error";
+            break;
+    }
+    
+    return [[NSError alloc] initWithDomain:@"com.postmates.error" code:status userInfo:@{ @"status" : @(status), @"description" : statusInfo, @"message" : message }];;
 }
 
 @end
