@@ -2,14 +2,22 @@
 //  DeliveryQuote.m
 //  PostmatesiOS
 //
-//  Created by Yondon Fu on 10/10/15.
-//  Copyright © 2015 Cal Hacks Squad. All rights reserved.
-//
 
 #import "DeliveryQuote.h"
 #import "Postmates.h"
 
 @implementation DeliveryQuote
+
+- (instancetype)initWithPickUp:(NSString *)pickUpAddress dropOff:(NSString *)dropOffAddress {
+    self = [super init];
+    
+    if (self) {
+        _pickUpAddress = pickUpAddress;
+        _dropOffAddress = dropOffAddress;
+    }
+    
+    return self;
+}
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = [super init];
@@ -30,31 +38,15 @@
     return self;
 }
 
-- (instancetype)initWithPickUp:(NSString *)pickUpAddress dropOff:(NSString *)dropOffAddress {
-    self = [super init];
-    
-    if (self) {
-        _pickUpAddress = pickUpAddress;
-        _dropOffAddress = dropOffAddress;
-    }
-    
-    return self;
+- (void)generateDeliveryQuoteWithCallback:(DeliveryQuoteBlock)callback {
+    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:self.pickUpAddress andDropAddress:self.dropOffAddress withCallback:^(DeliveryQuote *quote, NSError *error) {
+        if (!error) {
+            callback(nil, error);
+        } else {
+            callback(quote, nil);
+        }
+    }];
 }
-
-//- (void)generateDeliveryQuoteWithCallback:(DeliveryQuoteBlock)callback {
-//    [[Postmates currentManager] getDeliveryQuoteWithPickupAddress:self.pickUpAddress andDropAddress:self.dropOffAddress withCallback:^(DeliveryQuote *quote, NSError *error) {
-//        if (!error) {
-//            NSLog(@"%@ Error: %@", NSStringFromSelector(_cmd), [error localizedDescription]);
-//            callback(nil, err);
-//        } else {
-//            NSLog(@"%@ Error: %@", NSStringFromSelector(_cmd), [error localizedDescription]);
-//            
-//            [self updateDeliveryQuoteWithDict:res];
-//            
-//            callback(self, nil);
-//        }
-//    }];
-//}
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"pickup_address: %@, dropoff_address: %@, kind: %@, id: %@, created: %@, expires: %@, fee: %@, currency: %@, dropoff_eta: %@, duration: %li",

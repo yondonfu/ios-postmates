@@ -2,9 +2,6 @@
 //  Delivery.h
 //  PostmatesiOS
 //
-//  Created by Yondon Fu on 10/10/15.
-//  Copyright © 2015 Cal Hacks Squad. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
@@ -23,7 +20,9 @@ typedef NS_ENUM(NSUInteger, DeliveryStatus) {
     DeliveryStatusReturned
 };
 
-typedef void (^DeliveryCallbackBlock)(Delivery *delivery, NSError *error);
+typedef void (^DeliveryCallbackBlock)(Delivery * _Nullable delivery, NSError * _Nullable error);
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface Delivery : NSObject
 
@@ -50,13 +49,12 @@ typedef void (^DeliveryCallbackBlock)(Delivery *delivery, NSError *error);
 
 @property (strong, nonatomic) NSDictionary *courier;
 
-- (void)cancelDeliveryWithCallback:(DeliveryCallbackBlock)callback;
-- (void)returnDeliveryWithCallback:(DeliveryCallbackBlock)callback;
-- (void)updateDeliveryStatusWithCallback:(DeliveryCallbackBlock)callback;
-
-- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(DeliveryCallbackBlock)callback;
-
-// Use this
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
+- (void)cancelDeliveryWithCallback:(DeliveryCallbackBlock)callback;
+- (void)returnDeliveryWithCallback:(DeliveryCallbackBlock)callback __deprecated;
+- (void)updateDeliveryStatusWithCallback:(DeliveryCallbackBlock)callback;
+
 @end
+
+NS_ASSUME_NONNULL_END

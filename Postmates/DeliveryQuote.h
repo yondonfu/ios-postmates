@@ -2,15 +2,14 @@
 //  DeliveryQuote.h
 //  PostmatesiOS
 //
-//  Created by Yondon Fu on 10/10/15.
-//  Copyright © 2015 Cal Hacks Squad. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
 @class DeliveryQuote;
 
-typedef void (^DeliveryQuoteBlock)(DeliveryQuote *quote, NSError *error);
+typedef void (^DeliveryQuoteBlock)(DeliveryQuote * _Nullable quote, NSError * _Nullable error);
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface DeliveryQuote : NSObject
 
@@ -30,3 +29,5 @@ typedef void (^DeliveryQuoteBlock)(DeliveryQuote *quote, NSError *error);
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end
+
+NS_ASSUME_NONNULL_END

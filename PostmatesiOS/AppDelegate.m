@@ -10,18 +10,19 @@
 #import "Postmates.h"
 
 #ifdef DEBUG
-    static NSString *kCustomerId = @"cus_Kf3bMZuhfEUbQV";
-#else
-    static NSString *kCustomerId = @"cus_LHaCYzKoaOhZTF"
+// Test user
+static NSString *kCustomerId = @"cus_Kf3bMZuhfEUbQV";
 #endif
+
+// TODO: Assign your API key here
+NSString * const kPostmatesAPIKey = @""; // 91bfcd0b-7a0e-443b-a568-481da0b05c0c
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    // Set keys
-    [Postmates setCustomerId:kCustomerId apiKey:@"91bfcd0b-7a0e-443b-a568-481da0b05c0c"];
+    [Postmates setCustomerId:kCustomerId apiKey:kPostmatesAPIKey];
     
     return YES;
 }

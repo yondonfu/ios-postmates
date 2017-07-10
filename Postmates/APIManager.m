@@ -2,16 +2,11 @@
 //  APIManager.m
 //  PostmatesiOS
 //
-//  Created by Cal Hacks Squad on 10/9/15.
-//  Copyright © 2015 calhackssquad. All rights reserved.
-//
 
 #import "APIManager.h"
 #import "AFNetworking.h"
 
 NSString * const kPostmatesTestToken = @"Basic ZWZmY2RhOTItZWNjMy00ZGI2LWI5NTQtZjhkOTE0ZTA5NGQ5Og==";
-
-typedef void (^ResponseBlock)(NSDictionary *response, NSError *error);
 
 @interface APIManager ()
 
@@ -30,18 +25,20 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     self = [super init];
     
     if (self) {
-        self.customerId = customerId;
-        self.apiKey = apiKey;
+        _customerId = customerId;
+        _apiKey = apiKey;
     }
     
     return self;
 }
 
-# pragma mark - Endpoints
+# pragma mark - GET Endpoints
 
 // GET /v1/customers/:customer_id/deliveries
-- (void)getDeliveriesWithCallback:(DeliveriesResponseBlock)callback {
+- (void)getDeliveriesWithCallback:(DeliveriesResponseBlock)callback filterOngoing:(BOOL)filterOngoing {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", kPostmatesCustomersURL, self.customerId];
+    targetAddress = (filterOngoing) ? [targetAddress stringByAppendingString:@"?filter=ongoing"] : targetAddress;
+    
     __block NSMutableArray<Delivery *> *deliveries = [NSMutableArray array];
     
     [self getWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
@@ -55,7 +52,7 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
                     }
                 }
                 
-                callback(deliveries, nil);
+                callback(deliveries, error);
             }
         } else {
             callback(nil, error);
@@ -76,9 +73,9 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
                 quote = [[DeliveryQuote alloc] initWithDictionary:response];
             }
             
-            callback(quote, nil);
+            callback(quote, error);
         } else {
-            callback(nil, nil);
+            callback(nil, error);
         }
     }];
 }
@@ -90,12 +87,14 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     [self getWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
         if (!error) {
             Delivery *delivery = [[Delivery alloc] initWithDictionary:response];
-            callback(delivery, nil);
+            callback(delivery, error);
         } else {
             callback(nil, error);
         }
     }];
 }
+
+# pragma mark - POST Endpoints
 
 // POST /v1/customers/:customer_id/deliveries
 - (void)postDeliveryWithQuoteId:(NSString *)quoteId
@@ -104,13 +103,13 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
                      pickupName:(NSString *)pickupName
                   pickupAddress:(NSString *) pickupAddress
                     pickupPhone:(NSString *)pickupPhone
-             pickupBusinessName: (NSString *)optionalbusName
-                    pickupNotes: (NSString *)pickupNotes
-                    dropoffName: (NSString *)dropName
-                    dropAddress: (NSString *)dropAdd
-                      dropPhone: (NSString *)dropPhone
-               dropBusinessName: (NSString *)optionalBusName
-                       andNotes: (NSString *)notes
+             pickupBusinessName:(NSString *)optionalBusinessName
+                    pickupNotes:(NSString *)pickupNotes
+                    dropoffName:(NSString *)dropName
+                    dropAddress:(NSString *)dropAdd
+                      dropPhone:(NSString *)dropPhone
+               dropBusinessName:(NSString *)optionalBusName
+                       andNotes:(NSString *)notes
                    withCallback:(ResponseBlock)callback {
     
     NSDictionary *mand = @{ @"quote_id" : quoteId,
@@ -130,14 +129,29 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     [self postDeliveryWithParams:mand withCallback:callback];
 }
 
-- (void)postDeliveryWithParams:(NSDictionary *)dict withCallback:(ResponseBlock)callback {
+- (void)postDeliveryWithParams:(NSDictionary *)parameters withCallback:(ResponseBlock)callback {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries", kPostmatesCustomersURL, self.customerId];
     
-    [self postWithURL:targetAddress paramaters:nil block:^(NSDictionary *response, NSError *error) {
+    [self postWithURL:targetAddress paramaters:parameters block:^(NSDictionary *response, NSError *error) {
         if (!error) {
-            callback(response, nil);
+            callback(response, error);
         } else {
-            callback(nil, nil);
+            callback(nil, error);
+        }
+    }];
+}
+
+// POST /v1/customers/:customer_id/deliveries/:delivery_id
+- (void)addTipForDelivery:(NSString *)deliveryId tip:(NSNumber *)tip withCallback:(DeliveryResponseBlock)block {
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", kPostmatesCustomersURL, self.customerId, deliveryId];
+    NSDictionary *parameters = (tip) ? @{ @"tip_by_customer" : @(tip.doubleValue / 0.01) } : nil;
+    
+    [self postWithURL:targetAddress paramaters:parameters block:^(NSDictionary *response, NSError *error) {
+        if (!error) {
+            Delivery *delivery = [[Delivery alloc] initWithDictionary:response];
+            block(delivery, nil);
+        } else {
+            block(nil, error);
         }
     }];
 }
@@ -148,9 +162,9 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     
     [self postWithURL:targetAddress paramaters:nil block:^(NSDictionary *response, NSError *error) {
         if (!error) {
-            callback(response, nil);
+            callback(response, error);
         } else {
-            callback(nil, nil);
+            callback(nil, error);
         }
     }];
 }
@@ -161,14 +175,14 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     
     [self postWithURL:targetAddress paramaters:nil block:^(NSDictionary *response, NSError *error) {
         if (!error) {
-            callback(response, nil);
+            callback(response, error);
         } else {
-            callback(nil, nil);
+            callback(nil, error);
         }
     }];
 }
 
-# pragma mark - Helpers
+# pragma mark - HTTP Helpers
 
 - (void)getWithURL:(NSString *)url parameters:(NSDictionary *)parameters block:(ResponseBlock)block {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
