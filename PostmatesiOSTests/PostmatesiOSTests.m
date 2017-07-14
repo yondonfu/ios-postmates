@@ -9,9 +9,9 @@
 
 #define DELIVERY_ID       @"del_LJUeMxq_Qh9Qkk"
 #define DELIVERY_QUOTE_ID @"dqt_LKaZ8vUDjWZ1_-"
-#define DELIVERY_PICKUP   @"600 Garden St Hoboken NJ 07030"
-#define DELIVERY_DROPOFF  @"700 Washington St Hoboken, NJ 07030"
-#define TIMEOUT_SEC       5
+#define DELIVERY_PICKUP   @"20 McAllister St, San Francisco, CA"
+#define DELIVERY_DROPOFF  @"101 Market St, San Francisco, CA"
+#define TIMEOUT_SEC       10
 
 @interface PostmatesiOSTests : XCTestCase
 @end
@@ -61,17 +61,18 @@
     [self waitForExpectations:@[expectation] timeout:TIMEOUT_SEC];
 }
 
-- (void)testPostDelivery {
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Post delivery request"];
+- (void)testPostDeliveryWithDictionary {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Post delivery request with dictionary"];
+    
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:@{ @"manifest"              : @"A box of trees",
-                                                                                       @"manifest_reference"    : @"Optional reference that identifies the box of kittens",
+                                                                                       @"manifest_reference"    : @"Optional reference that identifies the box of trees",
                                                                                        @"pickup_name"           : @"The Warehouse",
-                                                                                       @"pickup_address"        : @"20 McAllister St, San Francisco, CA",
+                                                                                       @"pickup_address"        : DELIVERY_PICKUP,
                                                                                        @"pickup_phone_number"   : @"555-555-5555",
                                                                                        @"pickup_business_name"  : @"Optional Pickup Business Name, Inc.",
                                                                                        @"pickup_notes"          : @"Optional note that this is Invoice #123",
                                                                                        @"dropoff_name"          : @"Alice",
-                                                                                       @"dropoff_address"       : @"101 Market St, San Francisco, CA",
+                                                                                       @"dropoff_address"       : DELIVERY_DROPOFF,
                                                                                        @"dropoff_phone_number"  : @"415-555-1234",
                                                                                        @"dropoff_business_name" : @"Optional Dropoff Business Name, Inc.",
                                                                                        @"dropoff_notes"         : @"Optional note to ring the bell" }];
@@ -90,6 +91,29 @@
         XCTAssertNotNil(response);
         [expectation fulfill];
     }];
+    
+    [self waitForExpectations:@[expectation] timeout:TIMEOUT_SEC];
+}
+
+- (void)testPostDeliveryWithInit {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Post delivery request with init"];
+    
+    [[Postmates currentManager] postDeliveryWithManifest:@"A box of trees"
+                                       manifestReference:@"Some reference"
+                                              pickupName:@"The Warehouse"
+                                           pickupAddress:DELIVERY_PICKUP
+                                             pickupPhone:@"555-555-5555"
+                                      pickupBusinessName:@"My Office"
+                                             pickupNotes:@"Please?"
+                                             dropoffName:@"Ryan"
+                                          dropoffAddress:DELIVERY_DROPOFF
+                                               dropPhone:@"415-555-1234"
+                                        dropBusinessName:@"Business Inc."
+                                                andNotes:@"Ring the bell!"
+                                            withCallback:^(NSDictionary *response, NSError *error) {
+                                                XCTAssertNotNil(response);
+                                                [expectation fulfill];
+                                            }];
     
     [self waitForExpectations:@[expectation] timeout:TIMEOUT_SEC];
 }
@@ -125,6 +149,18 @@
             XCTAssertNotNil(response);
             [expectation fulfill];
         }
+    }];
+    
+    [self waitForExpectations:@[expectation] timeout:TIMEOUT_SEC];
+}
+
+- (void)testGetDeliveryZones {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Get delivery zones"];
+    
+    // Get delivery zones
+    [[Postmates currentManager] getDeliveryZonesWithCallback:^(NSArray<DeliveryZone *> *zones, NSError *error) {
+        XCTAssertNotNil(zones);
+        [expectation fulfill];
     }];
     
     [self waitForExpectations:@[expectation] timeout:TIMEOUT_SEC];

@@ -6,25 +6,12 @@
 #import <Foundation/Foundation.h>
 
 #import "Delivery.h"
+#import "DeliveryZone.h"
 
-/**
- Multi-delivery response
- */
-typedef void (^DeliveriesResponseBlock)(NSArray<Delivery *> * _Nullable deliveries, NSError * _Nullable error);
-
-/**
- Delivery response
- */
 typedef void (^DeliveryResponseBlock)(Delivery * _Nullable delivery, NSError * _Nullable error);
-
-/**
- Delivery quote response
- */
 typedef void (^DeliveryQuoteResponseBlock)(DeliveryQuote * _Nullable quote, NSError * _Nullable error);
-
-/**
- Generic dictionary/error response block
- */
+typedef void (^DeliveriesResponseBlock)(NSArray<Delivery *> * _Nullable deliveries, NSError * _Nullable error);
+typedef void (^DeliveryZonesResponseBlock)(NSArray<DeliveryZone *> * _Nullable zones, NSError * _Nullable error);
 typedef void (^ResponseBlock)(NSDictionary * _Nullable response, NSError * _Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
@@ -32,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface APIManager : NSObject
 
 /**
- Customer ID token used for requests
+ Customer ID used for requests
  */
 @property (nonatomic, readonly) NSString *customerId;
 
@@ -42,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *apiKey;
 
 /**
- Init Customer ID
+ Init customer
  
  @param customerId Customer ID
  @param apiKey     API key
@@ -54,17 +41,17 @@ NS_ASSUME_NONNULL_BEGIN
  Get all deliveries
  
  @param filterOngoing   Only return deliveries that are currently being delivered
- @param block           Block containing `Delivery` objects or an `NSError`
+ @param callback        Callback containing `Delivery` objects or an `NSError`
  */
-- (void)getDeliveriesWithCallback:(DeliveriesResponseBlock)block filterOngoing:(BOOL)filterOngoing;
+- (void)getDeliveriesWithCallback:(DeliveriesResponseBlock)callback filterOngoing:(BOOL)filterOngoing;
 
 /**
  Get delivery
  
  @param deliveryId Delivery ID
- @param block      Callback containing matching delivery
+ @param callback   Callback containing matching delivery
  */
-- (void)getDeliveryForId:(NSString *)deliveryId withCallback:(DeliveryResponseBlock)block;
+- (void)getDeliveryForId:(NSString *)deliveryId withCallback:(DeliveryResponseBlock)callback;
 
 /**
  Get delivery quote
@@ -80,35 +67,33 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Create delivery request
  
- @param quoteId              The ID of a previously generated delivery quote. Optional, but recommended. Example: "del_KSsT9zJdfV3P9k"
  @param manifest             A detailed description of what the courier will be delivering. Example: "A box of gray kittens"
- @param optionalRef          Optional reference that identifies the manifest. Example: "Order #690"
+ @param manifestReference    Optional reference that identifies the manifest. Example: "Order #690"
  @param pickupName           Name of the place where the courier will make the pickup. Example: "Kitten Warehouse"
  @param pickupAddress        The pickup address for the delivery. Example: "20 McAllister St, San Francisco, CA"
  @param pickupPhone          The phone number of the pickup location. Example: "415-555-4242"
- @param optionalBusinessName Optional business name of the pickup location. Example: "Feline Enterprises, Inc."
+ @param pickupBusinessName   Optional business name of the pickup location. Example: "Feline Enterprises, Inc."
  @param pickupNotes          Additional instructions for the courier at the pickup location. Example: "Ring the doorbell twice"
  @param dropName             Name of the place where the courier will make the dropoff. Example: "Alice"
- @param dropAdd              The dropoff address for the delivery. Example: "678 Green St, San Francisco, CA"
+ @param dropoffAddress       The dropoff address for the delivery. Example: "678 Green St, San Francisco, CA"
  @param dropPhone            The phone number of the dropoff location. Example: "415-555-8484"
- @param optionalBusName      Optional business name of the dropoff location. Example: "Alice's Cat Cafe"
+ @param dropBusinessName     Optional business name of the dropoff location. Example: "Alice's Cat Cafe"
  @param notes                Additional instructions for the courier at the dropoff location. Example: "Tell the security guard that you're here to see Alice."
  @param callback             Callback
  */
-- (void)postDeliveryWithQuoteId:(NSString *)quoteId
-                       manifest:(NSString *)manifest
-             manifest_reference:(NSString *)optionalRef
-                     pickupName:(NSString *)pickupName
-                  pickupAddress:(NSString *)pickupAddress
-                    pickupPhone:(NSString *)pickupPhone
-             pickupBusinessName:(NSString *)optionalBusinessName
-                    pickupNotes:(NSString *)pickupNotes
-                    dropoffName:(NSString *)dropName
-                    dropAddress:(NSString *)dropAdd
-                      dropPhone:(NSString *)dropPhone
-               dropBusinessName:(NSString *)optionalBusName
-                       andNotes:(NSString *)notes
-                   withCallback:(ResponseBlock)callback;
+- (void)postDeliveryWithManifest:(NSString *)manifest
+               manifestReference:(NSString *)manifestReference
+                      pickupName:(NSString *)pickupName
+                   pickupAddress:(NSString *)pickupAddress
+                     pickupPhone:(NSString *)pickupPhone
+              pickupBusinessName:(NSString *)pickupBusinessName
+                     pickupNotes:(NSString *)pickupNotes
+                     dropoffName:(NSString *)dropName
+                  dropoffAddress:(NSString *)dropoffAddress
+                       dropPhone:(NSString *)dropPhone
+                dropBusinessName:(NSString *)dropBusinessName
+                        andNotes:(NSString *)notes
+                    withCallback:(ResponseBlock)callback;
 
 /**
  Create delivery request (dictionary)
@@ -123,9 +108,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param deliveryId Delivery ID
  @param tip        Tip amount (e.g. 3.50)
- @param block      If error is 410, the order can no longer be tipped (7 days)
+ @param callback   If error is 410, the order can no longer be tipped (7 days)
  */
-- (void)addTipForDelivery:(NSString *)deliveryId tip:(NSNumber *)tip withCallback:(DeliveryResponseBlock)block;
+- (void)addTipForDelivery:(NSString *)deliveryId tip:(NSNumber *)tip withCallback:(DeliveryResponseBlock)callback;
 
 /**
  Cancel delivery
@@ -134,6 +119,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param callback   Callback
  */
 - (void)cancelDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback;
+
+/**
+ Get delivery zones
+ 
+ @param callback Callback containing `DeliveryZone` objects or an `NSError`
+ */
+- (void)getDeliveryZonesWithCallback:(DeliveryZonesResponseBlock)callback;
 
 /**
  Return delivery by identifier (deprecated Nov 2016)

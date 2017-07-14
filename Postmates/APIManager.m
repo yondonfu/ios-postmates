@@ -4,9 +4,14 @@
 //
 
 #import "APIManager.h"
+
 #import "AFNetworking.h"
 
+#ifdef DEBUG
 NSString * const kPostmatesTestToken = @"Basic ZWZmY2RhOTItZWNjMy00ZGI2LWI5NTQtZjhkOTE0ZTA5NGQ5Og==";
+#endif
+
+NSString * const kPostmatesCustomersURL = @"https://api.postmates.com/v1/customers/";
 
 @interface APIManager ()
 
@@ -14,8 +19,6 @@ NSString * const kPostmatesTestToken = @"Basic ZWZmY2RhOTItZWNjMy00ZGI2LWI5NTQtZ
 @property (nonatomic, strong) NSString *apiKey;
 
 @end
-
-static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/customers/";
 
 @implementation APIManager
 
@@ -97,34 +100,32 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 # pragma mark - POST Endpoints
 
 // POST /v1/customers/:customer_id/deliveries
-- (void)postDeliveryWithQuoteId:(NSString *)quoteId
-                       manifest:(NSString *)manifest
-             manifest_reference:(NSString *)optionalRef
-                     pickupName:(NSString *)pickupName
-                  pickupAddress:(NSString *) pickupAddress
-                    pickupPhone:(NSString *)pickupPhone
-             pickupBusinessName:(NSString *)optionalBusinessName
-                    pickupNotes:(NSString *)pickupNotes
-                    dropoffName:(NSString *)dropName
-                    dropAddress:(NSString *)dropAdd
-                      dropPhone:(NSString *)dropPhone
-               dropBusinessName:(NSString *)optionalBusName
-                       andNotes:(NSString *)notes
-                   withCallback:(ResponseBlock)callback {
+- (void)postDeliveryWithManifest:(NSString *)manifest
+               manifestReference:(NSString *)manifestReference
+                      pickupName:(NSString *)pickupName
+                   pickupAddress:(NSString *)pickupAddress
+                     pickupPhone:(NSString *)pickupPhone
+              pickupBusinessName:(NSString *)pickupBusinessName
+                     pickupNotes:(NSString *)pickupNotes
+                     dropoffName:(NSString *)dropName
+                  dropoffAddress:(NSString *)dropoffAddress
+                       dropPhone:(NSString *)dropPhone
+                dropBusinessName:(NSString *)dropBusinessName
+                        andNotes:(NSString *)notes
+                    withCallback:(ResponseBlock)callback {
     
-    NSDictionary *mand = @{ @"quote_id" : quoteId,
-                            @"manifest" : manifest,
-                            @"manifest_reference" : optionalRef,
-                            @"pickup_name" : pickupName ,
-                            @"pickup_address" : pickupAddress,
-                            @"pickup_phone_number" : pickupPhone,
-                            @"pickup_business_name" : pickupName,
-                            @"pickup_notes" : pickupNotes,
-                            @"dropoff_name" : dropName,
-                            @"dropoff_address" : dropAdd,
-                            @"dropoff_phone_number" : dropPhone,
-                            @"dropoff_business_name" : dropName,
-                            @"dropoff_notes" : notes };
+    NSDictionary *mand = @{ @"manifest"              : manifest,
+                            @"manifest_reference"    : manifestReference,
+                            @"pickup_name"           : pickupBusinessName,
+                            @"pickup_address"        : pickupAddress,
+                            @"pickup_phone_number"   : pickupPhone,
+                            @"pickup_business_name"  : pickupBusinessName,
+                            @"pickup_notes"          : pickupNotes,
+                            @"dropoff_name"          : dropBusinessName,
+                            @"dropoff_address"       : dropoffAddress,
+                            @"dropoff_phone_number"  : dropPhone,
+                            @"dropoff_business_name" : dropBusinessName,
+                            @"dropoff_notes"         : notes };
     
     [self postDeliveryWithParams:mand withCallback:callback];
 }
@@ -142,27 +143,14 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 }
 
 // POST /v1/customers/:customer_id/deliveries/:delivery_id
-- (void)addTipForDelivery:(NSString *)deliveryId tip:(NSNumber *)tip withCallback:(DeliveryResponseBlock)block {
+- (void)addTipForDelivery:(NSString *)deliveryId tip:(NSNumber *)tip withCallback:(DeliveryResponseBlock)callback {
     NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@", kPostmatesCustomersURL, self.customerId, deliveryId];
     NSDictionary *parameters = (tip) ? @{ @"tip_by_customer" : @(tip.doubleValue / 0.01) } : nil;
     
     [self postWithURL:targetAddress parameters:parameters block:^(NSDictionary *response, NSError *error) {
         if (!error) {
             Delivery *delivery = [[Delivery alloc] initWithDictionary:response];
-            block(delivery, nil);
-        } else {
-            block(nil, error);
-        }
-    }];
-}
-
-// POST /v1/customer/:customer_id/deliveries/:delivery_id/return
-- (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback __deprecated {
-    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", kPostmatesCustomersURL, self.customerId, deliveryId];
-    
-    [self postWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
-        if (!error) {
-            callback(response, error);
+            callback(delivery, nil);
         } else {
             callback(nil, error);
         }
@@ -182,9 +170,41 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     }];
 }
 
+// /v1/delivery_zones
+- (void)getDeliveryZonesWithCallback:(DeliveryZonesResponseBlock)callback {
+    [self getWithURL:@"https://api.postmates.com/v1/delivery_zones" parameters:nil block:^(NSDictionary *response, NSError *error) {
+        if (!error) {
+            NSMutableArray *zones = [NSMutableArray array];
+            
+            for (NSDictionary *dictionary in response) {
+                DeliveryZone *zone = [[DeliveryZone alloc] initWithDictionary:dictionary];
+                [zones addObject:zone];
+            }
+            
+            callback(zones, error);
+        } else {
+            callback(nil, error);
+        }
+    }];
+}
+
+// POST /v1/customer/:customer_id/deliveries/:delivery_id/return
+- (void)returnDeliveryForId:(NSString *)deliveryId withCallback:(ResponseBlock)callback __deprecated {
+    NSString *targetAddress = [NSString stringWithFormat:@"%@%@/deliveries/%@/return", kPostmatesCustomersURL, self.customerId, deliveryId];
+    
+    [self postWithURL:targetAddress parameters:nil block:^(NSDictionary *response, NSError *error) {
+        if (!error) {
+            callback(response, error);
+        } else {
+            callback(nil, error);
+        }
+    }];
+}
+
+
 # pragma mark - HTTP Helpers
 
-- (void)getWithURL:(NSString *)url parameters:(NSDictionary *)parameters block:(ResponseBlock)block {
+- (void)getWithURL:(NSString *)url parameters:(NSDictionary *)parameters block:(ResponseBlock)callback {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     
@@ -194,19 +214,15 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
     [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:self.apiKey password:@""];
 #endif
     
-    // TODO: Custom NSError
-    
     [manager GET:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-        block(responseObject, nil);
+        callback(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
-        NSInteger status = [response statusCode];
-        
-        block(nil, [self errorWithError:error status:status]);
+        callback(nil, [self errorWithError:error status:response.statusCode]);
     }];
 }
 
-- (void)postWithURL:(NSString *)url parameters:(NSDictionary *)parameters block:(ResponseBlock)block {
+- (void)postWithURL:(NSString *)url parameters:(NSDictionary *)parameters block:(ResponseBlock)callback {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     [manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -218,12 +234,10 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 #endif
     
     [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-        block(responseObject, nil);
+        callback(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
-        NSInteger status = [response statusCode];
-        
-        block(nil, [self errorWithError:error status:status]);
+        callback(nil, [self errorWithError:error status:response.statusCode]);
     }];
 }
 
@@ -232,38 +246,9 @@ static const NSString *kPostmatesCustomersURL = @"https://api.postmates.com/v1/c
 - (NSError *)errorWithError:(NSError *)error status:(NSInteger)status {
     if (!error) return nil;
     
-    NSString *statusInfo = nil;
     NSDictionary *errorDict = [NSJSONSerialization JSONObjectWithData:error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey] options:kNilOptions error:nil];
     NSString *message = (errorDict) ? [errorDict objectForKey:@"message"] : @"";
-    
-    // NSArray *codes = @[ @"invalid_params",
-    //                     @"unknown_location",
-    //                     @"request_rate_limit_exceeded",
-    //                     @"customer_not_approved",
-    //                     @"account_suspended",
-    //                     @"not_found",
-    //                     @"service_unavailable",
-    //                     @"delivery_limit_exceeded",
-    //                     @"customer_limited",
-    //                     @"couriers_busy"];
-    //
-    // for (NSString *code in codes) {
-    //     if ([errorDict objectForKey:@"code"] && [[errorDict objectForKey:@"code"] isEqualToString:code]) {
-    //         message = [errorDict objectForKey:@"message"];
-    //         break;
-    //     }
-    // }
-    
-    // invalid_params              - The indicated parameters were missing or invalid.
-    // unknown_location            - We weren't able to understand the provided address. This usually indicates the address is wrong, or perhaps not exact enough.
-    // request_rate_limit_exceeded - This API key has made too many requests.
-    // customer_not_approved       - You account has not been approved to create deliveries. Please refer to our approval guidelines for more information.
-    // account_suspended
-    // not_found
-    // service_unavailable
-    // delivery_limit_exceeded   - You have hit the maximum amount of ongoing deliveries allowed.
-    // customer_limited          - Your account's limits have been exceeded.
-    // couriers_busy             - All of our couriers are currently busy.
+    NSString *statusInfo = nil;
     
     switch (status) {
         case 304:

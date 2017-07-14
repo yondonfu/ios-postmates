@@ -32,6 +32,7 @@
 		77B1909D1BC9BFEF00702C6C /* Location.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77B190911BC9BF6C00702C6C /* Location.h */; };
 		77B1909E1BC9BFEF00702C6C /* Postmates.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77B190931BC9BF6C00702C6C /* Postmates.h */; };
 		77B190A41BC9C7C900702C6C /* libPostmates.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B190821BC9BE4B00702C6C /* libPostmates.a */; };
+		94226E671F1326DA00BE134A /* DeliveryZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 94226E661F1326DA00BE134A /* DeliveryZone.m */; };
 		9487EE641EDE69B0005C24CB /* PostmatesiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9487EE631EDE69B0005C24CB /* PostmatesiOSTests.m */; };
 		9770F5331BC8F66600AE5D94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5321BC8F66600AE5D94 /* main.m */; };
 		9770F5361BC8F66600AE5D94 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9770F5351BC8F66600AE5D94 /* AppDelegate.m */; };
@@ -84,6 +85,8 @@
 		77B190921BC9BF6C00702C6C /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		77B190931BC9BF6C00702C6C /* Postmates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Postmates.h; sourceTree = "<group>"; };
 		77B190941BC9BF6C00702C6C /* Postmates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Postmates.m; sourceTree = "<group>"; };
+		94226E651F1326DA00BE134A /* DeliveryZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeliveryZone.h; sourceTree = "<group>"; };
+		94226E661F1326DA00BE134A /* DeliveryZone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeliveryZone.m; sourceTree = "<group>"; };
 		9487EE611EDE69AF005C24CB /* PostmatesiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostmatesiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9487EE631EDE69B0005C24CB /* PostmatesiOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PostmatesiOSTests.m; sourceTree = "<group>"; };
 		9487EE651EDE69B0005C24CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -172,6 +175,8 @@
 				77B190901BC9BF6C00702C6C /* DeliveryQuote.m */,
 				77B190911BC9BF6C00702C6C /* Location.h */,
 				77B190921BC9BF6C00702C6C /* Location.m */,
+				94226E651F1326DA00BE134A /* DeliveryZone.h */,
+				94226E661F1326DA00BE134A /* DeliveryZone.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -457,6 +462,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77B190951BC9BF6C00702C6C /* APIManager.m in Sources */,
+				94226E671F1326DA00BE134A /* DeliveryZone.m in Sources */,
 				77B190991BC9BF6C00702C6C /* Postmates.m in Sources */,
 				77B190971BC9BF6C00702C6C /* DeliveryQuote.m in Sources */,
 				77B190981BC9BF6C00702C6C /* Location.m in Sources */,
