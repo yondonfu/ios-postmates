@@ -8,7 +8,7 @@ An Objective-C wrapper for the Postmates REST API that gives iOS developers easi
 ### CocoaPods
 Add the following line to your Podfile:
 
-`pod 'PostmatesiOS'
+`pod 'PostmatesiOS`
 
 Add the following lines to your bridge file if you plan to use the framework with Swift:
 ```
