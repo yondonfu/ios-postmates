@@ -8,19 +8,11 @@
 
 #import "ViewController.h"
 #import "Postmates.h"
-#import "APIManager.h"
-#import "DeliveryQuote.h"
-#import "Delivery.h"
-
-@interface ViewController ()
-
-@end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.    
 }
 
 - (void)didReceiveMemoryWarning {

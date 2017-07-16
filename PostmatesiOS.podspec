@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "PostmatesiOS"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "An iOS wrapper for the Postmates REST API"
 
   # This description is used to generate tags and improve search results.
@@ -53,10 +53,7 @@ Pod::Spec.new do |s|
   #  profile URL.
   #
 
-  s.author             = { "Yondon Fu" => "yondon.fu@gmail.com" }
-  # Or just: s.author    = "Yondon Fu"
-  # s.authors            = { "Yondon Fu" => "yondon.fu@gmail.com" }
-  # s.social_media_url   = "http://twitter.com/YondonFu"
+  s.authors = { "Yondon Fu" => "yondon.fu@gmail.com", "Ryan Cohen" => "notryancohen@gmail.com" }
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -133,7 +130,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
-  # s.dependency "JSONKit", "~> 1.4"
   s.dependency 'AFNetworking'
 
 end

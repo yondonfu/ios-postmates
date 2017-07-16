@@ -1,11 +1,14 @@
-# iOS Objective-C Postmates Library
-An Objective-C wrapper for Postmates REST API that gives iOS developers easier access to Postmates' on demand services within their mobile applications.
+# Postmates iOS
+An Objective-C wrapper for the Postmates REST API that gives iOS developers easier access to Postmates' on demand services within their mobile applications.
+
+## Build Status
+[![Build Status](https://travis-ci.org/imryan/ios-postmates.svg?branch=master)](https://travis-ci.org/imryan/ios-postmates)
 
 ## Getting Started
 ### CocoaPods
 Add the following line to your Podfile:
 
-`pod 'PostmatesiOS', '~> 0.0.1'`
+`pod 'PostmatesiOS`
 
 Add the following lines to your bridge file if you plan to use the framework with Swift:
 ```
@@ -16,10 +19,9 @@ Add the following lines to your bridge file if you plan to use the framework wit
 #import "PostmatesiOS/APIManager.h"
 ```
 
-Then, add this line in your class/classes to use the framework:
-`import PostmatesiOS`
+Then, add this line in your class/classes to use the framework:    
+`@import PostmatesiOS`
 
 ### Add PostmatesiOS to your app
-In your AppDelegate.m file and under application:didFinishLaunchingWithOptions: add this line:
-
+In your `AppDelegate` file under `application:didFinishLaunchingWithOptions`, add this line:    
 `[Postmates setCustomerId:@"YOUR-CUSTOMER-ID" apiKey:@"YOUR-API-KEY"];`

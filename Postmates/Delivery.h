@@ -2,23 +2,27 @@
 //  Delivery.h
 //  PostmatesiOS
 //
-//  Created by Yondon Fu on 10/10/15.
-//  Copyright © 2015 Cal Hacks Squad. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
+
 #import "DeliveryQuote.h"
 #import "Location.h"
 
-typedef enum {
-    Pending = 1,
-    Pickup,
-    PickupComplete,
-    Dropoff,
-    Canceled,
-    Delivered,
-    Returned
-} DeliveryStatus;
+@class Delivery;
+
+typedef NS_ENUM(NSUInteger, DeliveryStatus) {
+    DeliveryStatusPending = 1,
+    DeliveryStatusPickup,
+    DeliveryStatusPickupComplete,
+    DeliveryStatusDropoff,
+    DeliveryStatusCanceled,
+    DeliveryStatusDelivered,
+    DeliveryStatusReturned
+};
+
+typedef void (^DeliveryCallbackBlock)(Delivery * _Nullable delivery, NSError * _Nullable error);
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface Delivery : NSObject
 
@@ -26,28 +30,31 @@ typedef enum {
 @property (strong, nonatomic) NSString *deliveryId;
 @property (strong, nonatomic) NSDate *created;
 @property (strong, nonatomic) NSDate *updated;
+
 @property (assign, nonatomic) DeliveryStatus status;
 @property (assign, nonatomic) BOOL complete;
+
 @property (strong, nonatomic) NSDate *pickUpEta;
 @property (strong, nonatomic) NSDate *dropOffEta;
 @property (strong, nonatomic) NSDate *dropOffDeadline;
-@property (strong, nonatomic) DeliveryQuote *quote; // Optional
-@property (assign, nonatomic) NSInteger fee;
+
+@property (strong, nonatomic) DeliveryQuote *quote;
+@property (strong, nonatomic) NSNumber *fee;
 @property (strong, nonatomic) NSString *currency;
 @property (strong, nonatomic) NSDictionary *manifest;
+
 @property (strong, nonatomic) NSString *dropOffId;
 @property (strong, nonatomic) Location *pickUp;
 @property (strong, nonatomic) Location *dropOff;
+
 @property (strong, nonatomic) NSDictionary *courier;
 
-- (instancetype)initWithParams:(NSDictionary *)params;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
-- (void)createDeliveryWithParams:(NSDictionary *)params withCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-
-- (void)cancelDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-
-- (void)returnDeliveryWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
-
-- (void)updateDeliveryStatusWithCallback:(void (^)(Delivery *delivery, NSError *err))callback;
+- (void)cancelDeliveryWithCallback:(DeliveryCallbackBlock)callback;
+- (void)returnDeliveryWithCallback:(DeliveryCallbackBlock)callback __deprecated;
+- (void)updateDeliveryStatusWithCallback:(DeliveryCallbackBlock)callback;
 
 @end
+
+NS_ASSUME_NONNULL_END

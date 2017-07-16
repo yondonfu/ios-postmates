@@ -2,13 +2,11 @@
 //  Location.h
 //  PostmatesiOS
 //
-//  Created by Yondon Fu on 10/10/15.
-//  Copyright © 2015 Cal Hacks Squad. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CLLocation.h>
 
-@import CoreLocation;
+NS_ASSUME_NONNULL_BEGIN
 
 @interface Location : NSObject
 
@@ -18,6 +16,8 @@
 @property (strong, nonatomic) NSString *notes;
 @property (assign, nonatomic) CLLocationCoordinate2D coordinates;
 
-- (instancetype)initWithParams:(NSDictionary *)params;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end
+
+NS_ASSUME_NONNULL_END
